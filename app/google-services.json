@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "992609422177",
+    "project_id": "cybershield-69f",
+    "storage_bucket": "cybershield-69f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992609422177:android:661a7b54ecda9497bc1320",
+        "android_client_info": {
+          "package_name": "com.nielit.cybershield"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu7yvdib1uyi_t4XrBY8TNfBPuP8S0DxA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
