@@ -5,10 +5,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -17,8 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import com.nielit.cybershield.domain.model.Lesson
 import com.nielit.cybershield.domain.model.Module
 import com.nielit.cybershield.ui.components.*
@@ -41,6 +46,7 @@ fun HomeScreen(
     val uiState       by viewModel.uiState.collectAsState()
     val isDarkMode    by viewModel.isDarkMode.collectAsState()
     val drawerState   = rememberDrawerState(DrawerValue.Closed)
+    val scope         = rememberCoroutineScope()
 
     ModalNavigationDrawer(
         drawerState   = drawerState,
@@ -50,7 +56,7 @@ fun HomeScreen(
                 isDarkMode        = isDarkMode,
                 onDarkModeToggle  = viewModel::toggleDarkMode,
                 onNavigateSettings= {
-                    viewModel.closeDrawer(drawerState)
+                    scope.launch { drawerState.close() }
                     onNavigateToSettings()
                 },
                 onSignOut         = {
@@ -65,7 +71,7 @@ fun HomeScreen(
     ) {
         HomeContent(
             uiState             = uiState,
-            onHamburgerClick    = { viewModel.openDrawer(drawerState) },
+            onHamburgerClick    = { scope.launch { drawerState.open() } },
             onLessonClick       = onNavigateToLesson,
             onRetry             = viewModel::loadContent
         )
@@ -85,22 +91,54 @@ fun HomeContent(
     modifier         : Modifier = Modifier
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
-            CsTopBar(
-                title            = "CyberShield",
-                navigationIcon   = {
-                    IconButton(onClick = onHamburgerClick) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu", tint = White)
+            // ── Enhanced TopBar with NIELIT Branding ──
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Navy)
+                    .statusBarsPadding()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                ) {
+                    IconButton(onClick = onHamburgerClick, modifier = Modifier.size(48.dp)) {
+                        Icon(Icons.Default.Menu, contentDescription = "Menu", tint = White, modifier = Modifier.size(24.dp))
+                    }
+
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "CyberShield",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = White
+                            )
+                        )
+                        Text(
+                            text = "NIELIT Cybersecurity Education",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = White.copy(alpha = 0.85f),
+                                fontSize = MaterialTheme.typography.labelSmall.fontSize
+                            )
+                        )
                     }
                 }
-            )
+            }
         },
         containerColor = Surface
     ) { padding ->
 
         when (uiState) {
             is HomeUiState.Loading -> {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(padding),
+                    contentAlignment = Alignment.Center
+                ) {
                     CircularProgressIndicator(color = Blue)
                 }
             }
@@ -170,7 +208,7 @@ private fun HomeSuccessContent(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ProgressSection
+// ProgressSection – Enhanced Government/NIELIT themed
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
@@ -181,28 +219,143 @@ fun ProgressSection(
     Card(
         shape    = MaterialTheme.shapes.medium,
         colors   = CardDefaults.cardColors(containerColor = White),
-        elevation= CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = modifier.fillMaxWidth()
+        elevation= CardDefaults.cardElevation(defaultElevation = 4.dp),
+        modifier = modifier
+            .fillMaxWidth()
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp)
+                .background(color = Surface)
         ) {
-            ProgressRing(percentage = overallProgress)
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text  = "Overall Progress: ${overallProgress.toInt()}%",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                color = Navy
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp)
+            ) {
+                // Header
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(Navy)
+                    )
+                    Spacer(Modifier.width(12.dp))
+                    Text(
+                        text = "YOUR LEARNING PROGRESS",
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp,
+                            color = Navy
+                        )
+                    )
+                }
+
+                // Progress Ring + Stats Container
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    // Left: Progress Ring
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        ProgressRing(
+                            percentage = overallProgress,
+                            size = 140.dp,
+                            strokeWidth = 14.dp,
+                            progressColor = Navy,
+                            trackColor = Border.copy(alpha = 0.3f)
+                        )
+                    }
+
+                    // Right: Stats
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        StatItem(
+                            label = "Overall Progress",
+                            value = "${overallProgress.toInt()}%",
+                            color = Navy
+                        )
+
+                        HorizontalDivider(
+                            color = Border.copy(alpha = 0.3f),
+                            thickness = 1.dp
+                        )
+
+                        StatItem(
+                            label = "Keep Learning",
+                            value = "Every Day",
+                            color = Blue
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                // Motivational message
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = Navy.copy(alpha = 0.05f),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(12.dp)
+                ) {
+                    Text(
+                        text = "🎯 Consistency builds expertise. Great progress so far!",
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = Navy,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    )
+                }
+            }
         }
     }
 }
 
+@Composable
+private fun StatItem(
+    label: String,
+    value: String,
+    color: androidx.compose.ui.graphics.Color
+) {
+    Column {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall.copy(
+                color = MutedText,
+                letterSpacing = 0.5.sp
+            )
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = value,
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight.Bold,
+                color = color,
+                fontSize = 20.sp
+            )
+        )
+    }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
-// ModuleCard  –  Expandable card with lesson rows
+// ModuleCard  –  Expandable card with lesson rows (Government themed)
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
@@ -218,19 +371,93 @@ fun ModuleCard(
     Card(
         shape    = MaterialTheme.shapes.medium,
         colors   = CardDefaults.cardColors(containerColor = White),
-        elevation= CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = modifier.fillMaxWidth()
+        elevation= CardDefaults.cardElevation(defaultElevation = 3.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .border(1.dp, Border.copy(alpha = 0.4f), MaterialTheme.shapes.medium)
     ) {
         Column {
-            // Card header (always visible)
-            ModuleCardHeader(
-                title          = module.title,
-                completedCount = completedCount,
-                totalCount     = module.lessons.size,
-                isExpanded     = isExpanded,
-                isPro          = module.isPro,
-                onClick        = onHeaderClick
-            )
+            // Card header (always visible) with Navy left accent
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = if (isExpanded) Navy.copy(alpha = 0.04f) else White)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(onClick = onHeaderClick)
+                        .padding(0.dp)
+                ) {
+                    // Navy left accent bar
+                    Box(
+                        modifier = Modifier
+                            .width(4.dp)
+                            .height(80.dp)
+                            .background(Navy)
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(16.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text  = module.title,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = Navy,
+                                    fontSize = 15.sp
+                                )
+                            )
+                            if (module.isPro) {
+                                Spacer(Modifier.width(8.dp))
+                                ProBadge()
+                            }
+                        }
+                        Spacer(Modifier.height(6.dp))
+
+                        // Progress mini-bar
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(0.8f)
+                                .height(6.dp)
+                                .clip(RoundedCornerShape(3.dp))
+                                .background(Border.copy(alpha = 0.3f))
+                        ) {
+                            val progress = if (module.lessons.isEmpty()) 0f else (completedCount.toFloat() / module.lessons.size)
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .fillMaxWidth(progress)
+                                    .background(Navy)
+                                    .clip(RoundedCornerShape(3.dp))
+                            )
+                        }
+
+                        Spacer(Modifier.height(6.dp))
+                        Text(
+                            text  = "$completedCount/${module.lessons.size} lessons completed",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = MutedText,
+                                fontSize = 11.sp
+                            )
+                        )
+                    }
+
+                    Icon(
+                        imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp
+                                      else            Icons.Default.KeyboardArrowDown,
+                        contentDescription = if (isExpanded) "Collapse" else "Expand",
+                        tint = Navy,
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(end = 12.dp)
+                    )
+                }
+            }
 
             // Expandable lesson list
             AnimatedVisibility(
@@ -239,7 +466,7 @@ fun ModuleCard(
                 exit          = shrinkVertically(animationSpec = tween(250))
             ) {
                 Column {
-                    Divider(color = Border, thickness = 1.dp)
+                    HorizontalDivider(color = Border, thickness = 1.dp)
                     module.lessons.forEach { lesson ->
                         LessonRow(
                             lesson      = lesson,
@@ -253,54 +480,8 @@ fun ModuleCard(
     }
 }
 
-@Composable
-private fun ModuleCardHeader(
-    title         : String,
-    completedCount: Int,
-    totalCount    : Int,
-    isExpanded    : Boolean,
-    isPro         : Boolean,
-    onClick       : () -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 14.dp)
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text  = title,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        color      = Navy
-                    )
-                )
-                if (isPro) {
-                    Spacer(Modifier.width(8.dp))
-                    ProBadge()
-                }
-            }
-            Spacer(Modifier.height(2.dp))
-            Text(
-                text  = "$completedCount/$totalCount completed",
-                style = MaterialTheme.typography.bodySmall,
-                color = MutedText
-            )
-        }
-        Icon(
-            imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp
-                          else            Icons.Default.KeyboardArrowDown,
-            contentDescription = if (isExpanded) "Collapse" else "Expand",
-            tint = MutedText
-        )
-    }
-}
-
 // ─────────────────────────────────────────────────────────────────────────────
-// LessonRow  –  Full-width tappable row, min 48dp touch target
+// LessonRow  –  Full-width tappable row, min 48dp touch target (Government styled)
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
@@ -314,36 +495,42 @@ fun LessonRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 48.dp)
+            .heightIn(min = 52.dp)
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 12.dp)
+            .background(
+                color = if (isCompleted) Surface else White,
+                shape = RoundedCornerShape(6.dp)
+            )
     ) {
-        // Status icon
+        // Status icon with Navy color
         Icon(
             imageVector = if (isCompleted) Icons.Default.CheckCircle
                           else             Icons.Default.RadioButtonUnchecked,
             contentDescription = if (isCompleted) "Completed" else "Not started",
-            tint   = if (isCompleted) SuccessGreen else MutedText,
-            modifier = Modifier.size(20.dp)
+            tint   = if (isCompleted) Navy else Border,
+            modifier = Modifier.size(22.dp)
         )
-        Spacer(Modifier.width(12.dp))
+        Spacer(Modifier.width(14.dp))
         Text(
             text  = lesson.title,
-            style = MaterialTheme.typography.titleMedium,
-            color = if (isCompleted) MutedText else Navy,
+            style = MaterialTheme.typography.titleMedium.copy(
+                color = if (isCompleted) MutedText else Navy,
+                fontWeight = if (isCompleted) FontWeight.Normal else FontWeight.SemiBold
+            ),
             modifier = Modifier.weight(1f)
         )
         Icon(
             imageVector = Icons.Default.ChevronRight,
             contentDescription = null,
-            tint = MutedText,
-            modifier = Modifier.size(16.dp)
+            tint = Navy.copy(alpha = if (isCompleted) 0.4f else 0.8f),
+            modifier = Modifier.size(18.dp)
         )
     }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ProBadge chip
+// ProBadge chip (Government premium badge)
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
@@ -351,15 +538,17 @@ fun ProBadge(modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .clip(MaterialTheme.shapes.extraLarge)
-            .background(Blue.copy(alpha = 0.1f))
-            .padding(horizontal = 8.dp, vertical = 2.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(color = Navy.copy(alpha = 0.1f))
+            .border(1.dp, Navy.copy(alpha = 0.3f), RoundedCornerShape(20.dp))
+            .padding(horizontal = 10.dp, vertical = 3.dp)
     ) {
         Text(
-            text  = "PRO",
-            style = MaterialTheme.typography.labelMedium.copy(
-                color      = Blue,
-                fontWeight = FontWeight.Bold
+            text  = "🔐 ADVANCED",
+            style = MaterialTheme.typography.labelSmall.copy(
+                color      = Navy,
+                fontWeight = FontWeight.Bold,
+                fontSize = 9.sp
             )
         )
     }
@@ -403,7 +592,7 @@ private fun HomeErrorState(
         modifier = modifier.fillMaxSize().padding(24.dp)
     ) {
         Text(text = message, style = MaterialTheme.typography.bodyMedium, color = MutedText,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+            textAlign = TextAlign.Center)
         Spacer(Modifier.height(16.dp))
         CsPrimaryButton(text = "Retry", onClick = onRetry, modifier = Modifier.width(160.dp))
     }

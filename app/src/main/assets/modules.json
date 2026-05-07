@@ -155,7 +155,7 @@
     "id": "module_04",
     "title": "Advanced Threats & Defence",
     "description": "Network attacks, forensics and incident response",
-    "is_pro": true,
+    "is_pro": false,
     "lessons": [
       {
         "id": "m04_l01",

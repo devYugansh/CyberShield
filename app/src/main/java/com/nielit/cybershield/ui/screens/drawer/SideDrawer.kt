@@ -45,12 +45,13 @@ fun SideDrawer(
             modifier = Modifier
                 .fillMaxSize()
                 .background(White)
+                .statusBarsPadding()
         ) {
 
             // ── Header – avatar + user info ──────────────────────────────────
             DrawerHeader(user = user)
 
-            Divider(color = Border, thickness = 1.dp)
+            HorizontalDivider(color = Border, thickness = 1.dp)
             Spacer(Modifier.height(8.dp))
 
             // ── Navigation items ─────────────────────────────────────────────
@@ -96,7 +97,7 @@ fun SideDrawer(
                 }
             )
 
-            Divider(color = Border, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(color = Border, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
 
             // ── Sign out ─────────────────────────────────────────────────────
             Spacer(Modifier.weight(1f))

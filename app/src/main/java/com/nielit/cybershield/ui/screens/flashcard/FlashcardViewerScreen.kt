@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -121,7 +122,7 @@ fun FlashcardViewerContent(
                         if (pagerState.currentPage > 0) showLeaveDialog = true
                         else onBack()
                     }) {
-                        Icon(Icons.Default.ArrowBack, "Back", tint = White)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = White)
                     }
                 },
                 actions = {
@@ -138,24 +139,25 @@ fun FlashcardViewerContent(
             modifier = modifier
                 .fillMaxSize()
                 .padding(padding)
+                .background(Surface)
         ) {
-            // Progress dash bar
-            Spacer(Modifier.height(8.dp))
+            // Progress dash bar with padding
+            Spacer(Modifier.height(12.dp))
             ProgressDashBar(total = totalPages, current = pagerState.currentPage)
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(12.dp))
 
-            // Pager
+            // Pager with expanded card area
             HorizontalPager(
                 count    = totalPages,
                 state    = pagerState,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
             ) { page ->
                 if (page < flashcards.size) {
                     FlashCard(
                         card     = flashcards[page],
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                        modifier = Modifier.fillMaxSize()
                     )
                 } else {
                     // SCREEN-06: Quiz card
@@ -166,9 +168,7 @@ fun FlashcardViewerContent(
                             isSubmitted    = quizSubmitted,
                             isCorrect      = quizCorrect,
                             onOptionSelect = { if (!quizSubmitted) selectedOption = it },
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                            modifier = Modifier.fillMaxSize()
                         )
                     } ?: QuizUnavailableCard(
                         onMarkComplete = { onQuizAnswered(false); onBackToModule() }
@@ -176,7 +176,7 @@ fun FlashcardViewerContent(
                 }
             }
 
-            // Navigation row
+            // Navigation row with bottom padding
             NavigationRow(
                 isOnQuizCard   = isOnQuizCard,
                 isOnLastContent= isOnLastContent,
@@ -196,7 +196,9 @@ fun FlashcardViewerContent(
                 },
                 onNextLesson   = onNextLesson,
                 onBackToModule = onBackToModule,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .fillMaxWidth()
             )
         }
     }
@@ -215,7 +217,7 @@ fun FlashcardViewerContent(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FlashCard  –  individual content card
+// FlashCard  –  individual content card (enhanced UI)
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
@@ -226,49 +228,107 @@ fun FlashCard(
     Card(
         shape    = MaterialTheme.shapes.medium,
         colors   = CardDefaults.cardColors(containerColor = White),
-        elevation= CardDefaults.cardElevation(defaultElevation = 4.dp),
+        elevation= CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = modifier
+            .fillMaxSize()
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            // Optional illustration (16:9)
+            // Optional illustration (16:9) with gradient overlay
             card.imageRes?.let {
-                AsyncImage(
-                    model             = it,
-                    contentDescription= null,
-                    contentScale      = ContentScale.Crop,
-                    modifier          = Modifier
+                Box(
+                    modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(16f / 9f)
-                        .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-                )
+                ) {
+                    AsyncImage(
+                        model             = it,
+                        contentDescription= null,
+                        contentScale      = ContentScale.Crop,
+                        modifier          = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+                    )
+                    // Subtle overlay for readability
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.2f))
+                    )
+                }
             }
 
-            Column(modifier = Modifier.padding(20.dp)) {
+            // Header section with accent line
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Surface)
+                    .padding(horizontal = 24.dp, vertical = 16.dp)
+                    .border(3.dp, Blue, RoundedCornerShape(0.dp))
+            ) {
                 Text(
                     text  = card.title,
-                    style = MaterialTheme.typography.titleMedium.copy(
+                    style = MaterialTheme.typography.headlineMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize   = 14.sp
+                        fontSize   = 20.sp
                     ),
                     color = Navy
                 )
-                Spacer(Modifier.height(8.dp))
+            }
+
+            // Content section with generous padding
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp, vertical = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Icon indicator
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(Blue)
+                    )
+                    Spacer(Modifier.width(12.dp))
+                    Text(
+                        text  = "Learn",
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontSize = 11.sp,
+                            letterSpacing = 1.2.sp,
+                            color = Blue
+                        )
+                    )
+                }
+
+                // Main body text with improved readability
                 Text(
                     text  = card.body,
-                    style = MaterialTheme.typography.bodySmall.copy(lineHeight = 18.sp),
-                    color = MaterialTheme.colorScheme.onSurface
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        lineHeight = 26.sp,
+                        fontWeight = FontWeight.Normal
+                    ),
+                    color = Navy,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp)
                 )
+
+                Spacer(Modifier.height(8.dp))
             }
         }
     }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SCREEN-06: QuizCard
+// SCREEN-06: QuizCard (enhanced UI)
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
@@ -283,35 +343,54 @@ fun QuizCard(
     Card(
         shape    = MaterialTheme.shapes.medium,
         colors   = CardDefaults.cardColors(containerColor = White),
-        elevation= CardDefaults.cardElevation(defaultElevation = 4.dp),
+        elevation= CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = modifier
+            .fillMaxSize()
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(20.dp)
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // QUESTION label
-            Text(
-                text  = "QUESTION",
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color         = MutedText,
-                    letterSpacing = 1.5.sp
+            // QUESTION label with accent
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(6.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(Blue)
                 )
-            )
-            Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text  = "QUESTION",
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        color         = Blue,
+                        letterSpacing = 1.5.sp,
+                        fontSize = 11.sp
+                    )
+                )
+            }
 
-            // Question body
+            // Question body with improved sizing
             Text(
                 text  = quiz.question,
-                style = MaterialTheme.typography.titleMedium.copy(fontSize = 14.sp),
-                color = Navy
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    lineHeight = 26.sp
+                ),
+                color = Navy,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(12.dp))
 
-            // Option rows
+            // Option rows with better spacing
             quiz.options.forEachIndexed { index, option ->
                 OptionRow(
                     text           = option,
@@ -322,24 +401,54 @@ fun QuizCard(
                         else -> OptionState.DEFAULT
                     },
                     onClick        = { onOptionSelect(index) },
-                    modifier       = Modifier.padding(vertical = 6.dp)
+                    modifier       = Modifier.padding(vertical = 8.dp)
                 )
             }
 
-            // Explanation
+            // Explanation with result feedback
             if (isSubmitted) {
-                Spacer(Modifier.height(24.dp))
-                Text(
-                    text  = if (isCorrect) "Correct!" else "Incorrect",
-                    color = if (isCorrect) SuccessGreen else Color.Red,
-                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text  = quiz.explanation,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Navy
-                )
+                Spacer(Modifier.height(16.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = if (isCorrect) Color(0xFFDCFCE7) else Color(0xFFFEE2E2),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(16.dp)
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                imageVector = if (isCorrect) Icons.Default.Check else Icons.Default.Close,
+                                contentDescription = null,
+                                tint = if (isCorrect) SuccessGreen else ErrorRed,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text  = if (isCorrect) "Correct!" else "Incorrect",
+                                color = if (isCorrect) SuccessGreen else ErrorRed,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 15.sp
+                                )
+                            )
+                        }
+
+                        Text(
+                            text  = quiz.explanation,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                lineHeight = 22.sp
+                            ),
+                            color = Navy
+                        )
+                    }
+                }
             }
         }
     }
@@ -353,40 +462,57 @@ fun OptionRow(
     modifier: Modifier = Modifier
 ) {
     val bgColor = when(state) {
-        OptionState.SELECTED -> Blue.copy(alpha = 0.1f)
-        OptionState.CORRECT  -> SuccessGreen.copy(alpha = 0.1f)
-        OptionState.WRONG    -> Color.Red.copy(alpha = 0.1f)
-        else                 -> White
+        OptionState.SELECTED -> Blue.copy(alpha = 0.12f)
+        OptionState.CORRECT  -> SuccessGreen.copy(alpha = 0.12f)
+        OptionState.WRONG    -> ErrorRed.copy(alpha = 0.12f)
+        else                 -> Surface
     }
     val borderColor = when(state) {
         OptionState.SELECTED -> Blue
         OptionState.CORRECT  -> SuccessGreen
-        OptionState.WRONG    -> Color.Red
-        else                 -> Color(0xFFE0E0E0)
+        OptionState.WRONG    -> ErrorRed
+        else                 -> Border
     }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(10.dp))
             .background(bgColor)
-            .border(1.dp, borderColor, RoundedCornerShape(8.dp))
+            .border(1.5.dp, borderColor, RoundedCornerShape(10.dp))
             .clickable { onClick() }
             .padding(16.dp)
     ) {
-        // Dot indicator
+        // Animated indicator dot
         Box(
             modifier = Modifier
-                .size(10.dp)
-                .clip(RoundedCornerShape(5.dp))
-                .background(if (state == OptionState.DEFAULT) Color(0xFFBDBDBD) else borderColor)
+                .size(12.dp)
+                .clip(RoundedCornerShape(6.dp))
+                .background(
+                    when (state) {
+                        OptionState.DEFAULT -> Border
+                        OptionState.SELECTED -> Blue
+                        OptionState.CORRECT -> SuccessGreen
+                        OptionState.WRONG -> ErrorRed
+                    }
+                )
         )
-        Spacer(Modifier.width(12.dp))
+        Spacer(Modifier.width(14.dp))
         Text(
             text  = text,
-            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
-            color = if (state == OptionState.DEFAULT) Navy else borderColor
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 14.sp,
+                fontWeight = if (state != OptionState.DEFAULT) FontWeight.SemiBold else FontWeight.Normal,
+                lineHeight = 20.sp
+            ),
+            color = when(state) {
+                OptionState.DEFAULT -> Navy
+                OptionState.SELECTED -> Blue
+                OptionState.CORRECT -> SuccessGreen
+                OptionState.WRONG -> ErrorRed
+            },
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
