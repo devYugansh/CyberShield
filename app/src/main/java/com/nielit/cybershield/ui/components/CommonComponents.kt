@@ -190,11 +190,12 @@ fun ProgressDashBar(
         modifier = modifier
             .fillMaxWidth()
             .height(4.dp)
-            .padding(horizontal = 16.dp)
     ) {
         if (total <= 0) return@Canvas
         val gap      = segmentGap.toPx()
-        val segWidth = (size.width - gap * (total - 1)) / total
+        val totalGaps = gap * (total - 1)
+        val segWidth = (size.width - totalGaps) / total
+
         repeat(total) { i ->
             val color = when {
                 i < current  -> DashFilled

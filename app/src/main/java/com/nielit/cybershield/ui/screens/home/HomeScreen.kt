@@ -346,7 +346,7 @@ fun ProgressSection(
                         .padding(12.dp)
                 ) {
                     Text(
-                        text = "🎯 Consistency builds expertise. Great progress so far!",
+                        text = "Consistency builds expertise. Great progress so far!",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = Navy,
                             fontWeight = FontWeight.SemiBold

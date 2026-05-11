@@ -1,10 +1,13 @@
 package com.nielit.cybershield.ui.screens.flashcard
 
+import android.content.Intent
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -15,10 +18,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,6 +40,7 @@ import com.nielit.cybershield.ui.components.*
 import com.nielit.cybershield.ui.theme.*
 import com.nielit.cybershield.viewmodel.FlashcardUiState
 import com.nielit.cybershield.viewmodel.FlashcardViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -100,15 +108,26 @@ fun FlashcardViewerContent(
     val totalPages   = flashcards.size + 1  // +1 for quiz card
     val pagerState   = rememberPagerState(initialPage = resumeIndex.coerceAtMost(totalPages - 1))
     val scope        = rememberCoroutineScope()
+    val context      = LocalContext.current
     var showLeaveDialog by remember { mutableStateOf(false) }
 
-    // Quiz state (lifted here so we can share with NavigationRow)
+    // Quiz state
     var selectedOption   by remember { mutableStateOf<Int?>(null) }
     var quizSubmitted    by remember { mutableStateOf(false) }
     var quizCorrect      by remember { mutableStateOf(false) }
 
-    // Persist card index on pager change
-    LaunchedEffect(pagerState.currentPage) { onCardViewed(pagerState.currentPage) }
+    // Timer state for Next button delay
+    var remainingSeconds by remember { mutableStateOf(2) }
+
+    // Persist card index and reset timer on pager change
+    LaunchedEffect(pagerState.currentPage) {
+        onCardViewed(pagerState.currentPage)
+        remainingSeconds = 2
+        while (remainingSeconds > 0) {
+            delay(1000)
+            remainingSeconds--
+        }
+    }
 
     val isOnQuizCard   = pagerState.currentPage == totalPages - 1
     val isOnLastContent= pagerState.currentPage == flashcards.size - 1
@@ -116,17 +135,31 @@ fun FlashcardViewerContent(
     Scaffold(
         topBar = {
             CsTopBar(
-                title = "Card ${pagerState.currentPage + 1} of $totalPages",
+                title = lesson.title,
                 navigationIcon = {
                     IconButton(onClick = {
                         if (pagerState.currentPage > 0) showLeaveDialog = true
                         else onBack()
                     }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = White)
+                        Icon(Icons.Default.Close, "Exit", tint = White)
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* trigger native share */ }) {
+                    IconButton(onClick = {
+                        val currentCard = if (!isOnQuizCard) flashcards[pagerState.currentPage] else null
+                        val shareText = if (currentCard != null) {
+                            "CyberShield Flashcard:\n\n${currentCard.title}\n\n${currentCard.body}"
+                        } else {
+                            "Check out this lesson on CyberShield: ${lesson.title}"
+                        }
+                        val sendIntent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, shareText)
+                            type = "text/plain"
+                        }
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        context.startActivity(shareIntent)
+                    }) {
                         Icon(Icons.Default.Share, "Share", tint = White)
                     }
                 }
@@ -141,48 +174,96 @@ fun FlashcardViewerContent(
                 .padding(padding)
                 .background(Surface)
         ) {
-            // Progress dash bar with padding
-            Spacer(Modifier.height(12.dp))
-            ProgressDashBar(total = totalPages, current = pagerState.currentPage)
-            Spacer(Modifier.height(12.dp))
+            // Enhanced Progress Indicator
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, bottom = 8.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Progress",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Navy.copy(alpha = 0.6f),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Surface(
+                        color = Blue.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = "${pagerState.currentPage + 1} / $totalPages",
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = Blue,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                }
+                Spacer(Modifier.height(12.dp))
+                ProgressDashBar(
+                    total = totalPages,
+                    current = pagerState.currentPage,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
+            }
 
-            // Pager with expanded card area
+            // Pager with dynamic card sizing
             HorizontalPager(
                 count    = totalPages,
                 state    = pagerState,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
+                itemSpacing = 16.dp,
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 16.dp)
             ) { page ->
-                if (page < flashcards.size) {
-                    FlashCard(
-                        card     = flashcards[page],
-                        modifier = Modifier.fillMaxSize()
-                    )
-                } else {
-                    // SCREEN-06: Quiz card
-                    lesson.quiz?.let { quiz ->
-                        QuizCard(
-                            quiz           = quiz,
-                            selectedOption = selectedOption,
-                            isSubmitted    = quizSubmitted,
-                            isCorrect      = quizCorrect,
-                            onOptionSelect = { if (!quizSubmitted) selectedOption = it },
-                            modifier = Modifier.fillMaxSize()
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (page < flashcards.size) {
+                        FlashCard(
+                            card     = flashcards[page],
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .shadow(8.dp, RoundedCornerShape(24.dp))
                         )
-                    } ?: QuizUnavailableCard(
-                        onMarkComplete = { onQuizAnswered(false); onBackToModule() }
-                    )
+                    } else {
+                        lesson.quiz?.let { quiz ->
+                            QuizCard(
+                                quiz           = quiz,
+                                selectedOption = selectedOption,
+                                isSubmitted    = quizSubmitted,
+                                isCorrect      = quizCorrect,
+                                onOptionSelect = { if (!quizSubmitted) selectedOption = it },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentHeight()
+                                    .shadow(8.dp, RoundedCornerShape(24.dp))
+                            )
+                        } ?: QuizUnavailableCard(
+                            onMarkComplete = { onQuizAnswered(false); onBackToModule() }
+                        )
+                    }
                 }
             }
 
-            // Navigation row with bottom padding
+            // Navigation row with delay countdown
             NavigationRow(
-                isOnQuizCard   = isOnQuizCard,
-                isOnLastContent= isOnLastContent,
-                quizSubmitted  = quizSubmitted,
-                selectedOption = selectedOption,
-                hasNextLesson  = hasNextLesson,
+                isOnQuizCard    = isOnQuizCard,
+                isOnLastContent = isOnLastContent,
+                quizSubmitted   = quizSubmitted,
+                selectedOption  = selectedOption,
+                hasNextLesson   = hasNextLesson,
+                remainingSeconds = remainingSeconds,
                 onNext = {
                     scope.launch {
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
@@ -197,7 +278,7 @@ fun FlashcardViewerContent(
                 onNextLesson   = onNextLesson,
                 onBackToModule = onBackToModule,
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .padding(horizontal = 20.dp, vertical = 20.dp)
                     .fillMaxWidth()
             )
         }
@@ -226,23 +307,21 @@ fun FlashCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        shape    = MaterialTheme.shapes.medium,
+        shape    = RoundedCornerShape(24.dp),
         colors   = CardDefaults.cardColors(containerColor = White),
-        elevation= CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = modifier
-            .fillMaxSize()
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
-            // Optional illustration (16:9) with gradient overlay
+            // Image section - dynamic height based on presence
             card.imageRes?.let {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(16f / 9f)
+                        .aspectRatio(16f / 10f)
                 ) {
                     AsyncImage(
                         model             = it,
@@ -250,75 +329,66 @@ fun FlashCard(
                         contentScale      = ContentScale.Crop,
                         modifier          = Modifier
                             .fillMaxSize()
-                            .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+                            .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                     )
-                    // Subtle overlay for readability
+                    // Gradient overlay for modern look
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color.Black.copy(alpha = 0.2f))
+                            .background(
+                                Brush.verticalGradient(
+                                    colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.4f)),
+                                    startY = 300f
+                                )
+                            )
                     )
                 }
             }
 
-            // Header section with accent line
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Surface)
-                    .padding(horizontal = 24.dp, vertical = 16.dp)
-                    .border(3.dp, Blue, RoundedCornerShape(0.dp))
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(
-                    text  = card.title,
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize   = 20.sp
-                    ),
-                    color = Navy
-                )
-            }
-
-            // Content section with generous padding
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp, vertical = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                // Icon indicator
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                // Category Tag
+                Surface(
+                    color = Blue.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(6.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(Blue)
-                    )
-                    Spacer(Modifier.width(12.dp))
                     Text(
-                        text  = "Learn",
-                        style = MaterialTheme.typography.labelMedium.copy(
-                            fontSize = 11.sp,
-                            letterSpacing = 1.2.sp,
-                            color = Blue
-                        )
+                        text = "EXPLANATION",
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.2.sp
+                        ),
+                        color = Blue
                     )
                 }
 
-                // Main body text with improved readability
+                Text(
+                    text  = card.title,
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        fontWeight = FontWeight.ExtraBold,
+                        lineHeight = 28.sp
+                    ),
+                    color = Navy
+                )
+
+                // Divider
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = Border.copy(alpha = 0.5f)
+                )
+
                 Text(
                     text  = card.body,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         lineHeight = 26.sp,
                         fontWeight = FontWeight.Normal
                     ),
-                    color = Navy,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp)
+                    color = Navy.copy(alpha = 0.8f)
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -341,56 +411,44 @@ fun QuizCard(
     modifier      : Modifier = Modifier
 ) {
     Card(
-        shape    = MaterialTheme.shapes.medium,
+        shape    = RoundedCornerShape(24.dp),
         colors   = CardDefaults.cardColors(containerColor = White),
-        elevation= CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = modifier
-            .fillMaxSize()
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // QUESTION label with accent
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 8.dp)
+            // QUESTION label
+            Surface(
+                color = Blue.copy(alpha = 0.1f),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(6.dp)
-                        .clip(RoundedCornerShape(50))
-                        .background(Blue)
-                )
-                Spacer(Modifier.width(12.dp))
                 Text(
-                    text  = "QUESTION",
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        color         = Blue,
-                        letterSpacing = 1.5.sp,
-                        fontSize = 11.sp
-                    )
+                    text = "KNOWLEDGE CHECK",
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.2.sp
+                    ),
+                    color = Blue
                 )
             }
 
-            // Question body with improved sizing
             Text(
                 text  = quiz.question,
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    lineHeight = 26.sp
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    fontWeight = FontWeight.Bold,
+                    lineHeight = 28.sp
                 ),
-                color = Navy,
-                modifier = Modifier.padding(bottom = 8.dp)
+                color = Navy
             )
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(8.dp))
 
-            // Option rows with better spacing
             quiz.options.forEachIndexed { index, option ->
                 OptionRow(
                     text           = option,
@@ -400,51 +458,44 @@ fun QuizCard(
                         isSubmitted && selectedOption == index && index != quiz.correctIndex -> OptionState.WRONG
                         else -> OptionState.DEFAULT
                     },
-                    onClick        = { onOptionSelect(index) },
-                    modifier       = Modifier.padding(vertical = 8.dp)
+                    onClick        = { onOptionSelect(index) }
                 )
             }
 
-            // Explanation with result feedback
-            if (isSubmitted) {
-                Spacer(Modifier.height(16.dp))
-
+            AnimatedVisibility(
+                visible = isSubmitted,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(top = 8.dp)
                         .background(
                             color = if (isCorrect) Color(0xFFDCFCE7) else Color(0xFFFEE2E2),
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(16.dp)
                         )
                         .padding(16.dp)
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                imageVector = if (isCorrect) Icons.Default.Check else Icons.Default.Close,
+                                imageVector = if (isCorrect) Icons.Default.CheckCircle else Icons.Default.Error,
                                 contentDescription = null,
                                 tint = if (isCorrect) SuccessGreen else ErrorRed,
-                                modifier = Modifier.size(18.dp)
+                                modifier = Modifier.size(20.dp)
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                text  = if (isCorrect) "Correct!" else "Incorrect",
+                                text  = if (isCorrect) "Excellent!" else "Not quite right",
                                 color = if (isCorrect) SuccessGreen else ErrorRed,
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp
-                                )
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                             )
                         }
 
                         Text(
                             text  = quiz.explanation,
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                lineHeight = 22.sp
-                            ),
+                            style = MaterialTheme.typography.bodyMedium.copy(lineHeight = 22.sp),
                             color = Navy
                         )
                     }
@@ -461,58 +512,56 @@ fun OptionRow(
     onClick : () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val bgColor = when(state) {
-        OptionState.SELECTED -> Blue.copy(alpha = 0.12f)
-        OptionState.CORRECT  -> SuccessGreen.copy(alpha = 0.12f)
-        OptionState.WRONG    -> ErrorRed.copy(alpha = 0.12f)
-        else                 -> Surface
-    }
-    val borderColor = when(state) {
-        OptionState.SELECTED -> Blue
-        OptionState.CORRECT  -> SuccessGreen
-        OptionState.WRONG    -> ErrorRed
-        else                 -> Border
-    }
+    val bgColor by animateColorAsState(
+        when(state) {
+            OptionState.SELECTED -> Blue.copy(alpha = 0.08f)
+            OptionState.CORRECT  -> SuccessGreen.copy(alpha = 0.12f)
+            OptionState.WRONG    -> ErrorRed.copy(alpha = 0.12f)
+            else                 -> Surface
+        }, label = "bgColor"
+    )
+    val borderColor by animateColorAsState(
+        when(state) {
+            OptionState.SELECTED -> Blue
+            OptionState.CORRECT  -> SuccessGreen
+            OptionState.WRONG    -> ErrorRed
+            else                 -> Border
+        }, label = "borderColor"
+    )
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
+            .padding(vertical = 6.dp)
+            .clip(RoundedCornerShape(16.dp))
             .background(bgColor)
-            .border(1.5.dp, borderColor, RoundedCornerShape(10.dp))
+            .border(1.5.dp, borderColor, RoundedCornerShape(16.dp))
             .clickable { onClick() }
             .padding(16.dp)
     ) {
-        // Animated indicator dot
         Box(
             modifier = Modifier
-                .size(12.dp)
-                .clip(RoundedCornerShape(6.dp))
-                .background(
-                    when (state) {
-                        OptionState.DEFAULT -> Border
-                        OptionState.SELECTED -> Blue
-                        OptionState.CORRECT -> SuccessGreen
-                        OptionState.WRONG -> ErrorRed
-                    }
+                .size(20.dp)
+                .border(2.dp, borderColor, CircleShape)
+                .padding(4.dp)
+        ) {
+            if (state != OptionState.DEFAULT) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape)
+                        .background(borderColor)
                 )
-        )
+            }
+        }
         Spacer(Modifier.width(14.dp))
         Text(
             text  = text,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 14.sp,
-                fontWeight = if (state != OptionState.DEFAULT) FontWeight.SemiBold else FontWeight.Normal,
-                lineHeight = 20.sp
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = if (state != OptionState.DEFAULT) FontWeight.Bold else FontWeight.Medium,
             ),
-            color = when(state) {
-                OptionState.DEFAULT -> Navy
-                OptionState.SELECTED -> Blue
-                OptionState.CORRECT -> SuccessGreen
-                OptionState.WRONG -> ErrorRed
-            },
-            modifier = Modifier.fillMaxWidth()
+            color = if (state != OptionState.DEFAULT) borderColor else Navy
         )
     }
 }
@@ -525,45 +574,52 @@ enum class OptionState { DEFAULT, SELECTED, CORRECT, WRONG }
 
 @Composable
 fun NavigationRow(
-    isOnQuizCard   : Boolean,
-    isOnLastContent: Boolean,
-    quizSubmitted  : Boolean,
-    selectedOption : Int?,
-    hasNextLesson  : Boolean,
-    onNext         : () -> Unit,
-    onCheckResult  : () -> Unit,
-    onNextLesson   : () -> Unit,
-    onBackToModule : () -> Unit,
-    modifier       : Modifier = Modifier
+    isOnQuizCard    : Boolean,
+    isOnLastContent : Boolean,
+    quizSubmitted   : Boolean,
+    selectedOption  : Int?,
+    hasNextLesson   : Boolean,
+    remainingSeconds: Int,
+    onNext          : () -> Unit,
+    onCheckResult   : () -> Unit,
+    onNextLesson    : () -> Unit,
+    onBackToModule  : () -> Unit,
+    modifier        : Modifier = Modifier
 ) {
+    val isTimerActive = remainingSeconds > 0 && !isOnQuizCard
     val label: String
     val action: () -> Unit
     val enabled: Boolean
 
     when {
         isOnQuizCard && quizSubmitted -> {
-            label   = if (hasNextLesson) "Next Lesson →" else "Back to Module"
+            label   = if (hasNextLesson) "Next Lesson" else "Finish Lesson"
             action  = if (hasNextLesson) onNextLesson else onBackToModule
             enabled = true
         }
         isOnQuizCard -> {
-            label   = "Check Result"
+            label   = "Check Answer"
             action  = onCheckResult
             enabled = selectedOption != null
         }
         isOnLastContent -> {
-            label   = "Take Quiz"
+            label   = if (isTimerActive) "Wait... ($remainingSeconds)" else "Start Quiz"
             action  = onNext
-            enabled = true
+            enabled = !isTimerActive
         }
         else -> {
-            label   = "Next →"
+            label   = if (isTimerActive) "Wait... ($remainingSeconds)" else "Next Card"
             action  = onNext
-            enabled = true
+            enabled = !isTimerActive
         }
     }
 
-    CsPrimaryButton(text = label, onClick = action, enabled = enabled, modifier = modifier)
+    CsPrimaryButton(
+        text = label,
+        onClick = action,
+        enabled = enabled,
+        modifier = modifier.animateContentSize()
+    )
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
