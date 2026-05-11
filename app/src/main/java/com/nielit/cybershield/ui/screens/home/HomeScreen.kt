@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import com.nielit.cybershield.domain.model.Lesson
 import com.nielit.cybershield.domain.model.Module
+import com.nielit.cybershield.domain.model.CourseUnit
 import com.nielit.cybershield.ui.components.*
 import com.nielit.cybershield.ui.screens.drawer.SideDrawer
 import com.nielit.cybershield.ui.theme.*
@@ -91,7 +92,6 @@ fun HomeContent(
     modifier         : Modifier = Modifier
 ) {
     Scaffold(
-        modifier = modifier,
         topBar = {
             // ── Enhanced TopBar with NIELIT Branding ──
             Box(
@@ -135,10 +135,7 @@ fun HomeContent(
 
         when (uiState) {
             is HomeUiState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize().padding(padding),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = Blue)
                 }
             }
@@ -151,7 +148,7 @@ fun HomeContent(
             is HomeUiState.Success -> {
                 HomeSuccessContent(
                     overallProgress = uiState.overallProgress,
-                    modules         = uiState.modules,
+                    units           = uiState.units,
                     completedMap    = uiState.lessonCompletionMap,
                     onLessonClick   = onLessonClick,
                     modifier        = Modifier.padding(padding)
@@ -164,7 +161,7 @@ fun HomeContent(
 @Composable
 private fun HomeSuccessContent(
     overallProgress: Float,
-    modules        : List<Module>,
+    units          : List<CourseUnit>,
     completedMap   : Map<String, Boolean>,  // lessonId -> isComplete
     onLessonClick  : (String, String) -> Unit,
     modifier       : Modifier = Modifier
@@ -185,24 +182,57 @@ private fun HomeSuccessContent(
             )
         }
 
-        // ── Module cards ──
-        if (modules.isEmpty()) {
+        // ── Units & Module cards ──
+        if (units.isEmpty()) {
             item { EmptyFirstLaunchNudge() }
         } else {
-            items(modules, key = { it.id }) { module ->
-                val completedCount = module.lessons.count { completedMap[it.id] == true }
-                ModuleCard(
-                    module         = module,
-                    completedCount = completedCount,
-                    isExpanded     = expandedModuleId == module.id,
-                    completedMap   = completedMap,
-                    onHeaderClick  = {
-                        expandedModuleId = if (expandedModuleId == module.id) null else module.id
-                    },
-                    onLessonClick  = onLessonClick,
-                    modifier       = Modifier.padding(horizontal = 16.dp)
-                )
+            units.forEach { unit ->
+                item(key = unit.id) {
+                    UnitHeader(unit)
+                }
+
+                items(unit.modules, key = { it.id }) { module ->
+                    val completedCount = module.lessons.count { completedMap[it.id] == true }
+                    ModuleCard(
+                        module         = module,
+                        completedCount = completedCount,
+                        isExpanded     = expandedModuleId == module.id,
+                        completedMap   = completedMap,
+                        onHeaderClick  = {
+                            expandedModuleId = if (expandedModuleId == module.id) null else module.id
+                        },
+                        onLessonClick  = onLessonClick,
+                        modifier       = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun UnitHeader(unit: CourseUnit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(top = 8.dp)
+    ) {
+        Text(
+            text = unit.title.uppercase(),
+            style = MaterialTheme.typography.labelLarge.copy(
+                fontWeight = FontWeight.ExtraBold,
+                color = Navy,
+                letterSpacing = 1.sp
+            )
+        )
+        if (unit.description.isNotEmpty()) {
+            Text(
+                text = unit.description,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MutedText
+                )
+            )
         }
     }
 }
@@ -290,7 +320,7 @@ fun ProgressSection(
                             color = Navy
                         )
 
-                        HorizontalDivider(
+                        Divider(
                             color = Border.copy(alpha = 0.3f),
                             thickness = 1.dp
                         )
@@ -466,7 +496,7 @@ fun ModuleCard(
                 exit          = shrinkVertically(animationSpec = tween(250))
             ) {
                 Column {
-                    HorizontalDivider(color = Border, thickness = 1.dp)
+                    Divider(color = Border, thickness = 1.dp)
                     module.lessons.forEach { lesson ->
                         LessonRow(
                             lesson      = lesson,
@@ -592,7 +622,7 @@ private fun HomeErrorState(
         modifier = modifier.fillMaxSize().padding(24.dp)
     ) {
         Text(text = message, style = MaterialTheme.typography.bodyMedium, color = MutedText,
-            textAlign = TextAlign.Center)
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center)
         Spacer(Modifier.height(16.dp))
         CsPrimaryButton(text = "Retry", onClick = onRetry, modifier = Modifier.width(160.dp))
     }

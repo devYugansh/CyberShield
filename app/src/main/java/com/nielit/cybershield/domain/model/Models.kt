@@ -2,9 +2,17 @@ package com.nielit.cybershield.domain.model
 
 // ── Content models ────────────────────────────────────────────────────────────
 
+data class CourseUnit(
+    val id          : String,
+    val title       : String,
+    val description : String,
+    val modules     : List<Module> = emptyList()
+)
+
 data class Module(
     val id          : String,
     val title       : String,
+    val description : String = "",
     val isPro       : Boolean = false,
     val lessons     : List<Lesson> = emptyList()
 )

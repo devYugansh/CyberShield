@@ -14,7 +14,7 @@ sealed class FlashcardUiState {
     object Empty : FlashcardUiState()
     data class Error(val message: String) : FlashcardUiState()
     data class Success(
-        val lesson: Lesson,
+        val lesson: com.nielit.cybershield.data.model.Lesson,
         val resumeCardIndex: Int = 0,
         val nextLessonId: String? = null
     ) : FlashcardUiState()
@@ -44,11 +44,7 @@ class FlashcardViewModel @Inject constructor(
                 return@launch
             }
             
-            val lesson = module.lessons.find { it.id == lessonId }
-            if (lesson == null) {
-                _uiState.value = FlashcardUiState.Error("Lesson not found")
-                return@launch
-            }
+            val lesson = module.lessons.find { it.id == lessonId } ?: return@launch
 
             val lessonIndex = module.lessons.indexOf(lesson)
             val nextLessonId = if (lessonIndex < module.lessons.lastIndex) {

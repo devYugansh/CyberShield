@@ -1,0 +1,830 @@
+[
+  {
+    "id": "unit_01",
+    "title": "Unit 1: Fundamentals of Cyber Security",
+    "description": "The bedrock of digital safety. Understand the 'Why' and 'How' of cybersecurity.",
+    "modules": [
+      {
+        "id": "u1_m1",
+        "title": "Introduction to Cyber Security",
+        "description": "Foundational concepts, the CIA triad, and why everyone is a target.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u1_m1_l1",
+            "title": "The Digital Battlefield",
+            "cards": [
+              {
+                "id": "u1_m1_l1_c1",
+                "title": "What is Cyber Security?",
+                "body": "It is the art of protecting networks, devices, and data from unauthorized access or criminal use. In the physical world, we have locks and guards; in the digital world, we have cybersecurity."
+              },
+              {
+                "id": "u1_m1_l1_c2",
+                "title": "The Scale of the Problem",
+                "body": "Every 39 seconds, a hacker attack occurs somewhere in the world. With billions of devices connected, the 'attack surface' is practically infinite. Your phone is a doorway into your entire life."
+              },
+              {
+                "id": "u1_m1_l1_c3",
+                "title": "Why it's Important",
+                "body": "It protects personal data like passwords and photos, prevents identity theft and financial fraud, and ensures critical systems like banking and healthcare run smoothly."
+              }
+            ],
+            "quiz": {
+              "question": "What is the primary goal of cybersecurity?",
+              "options": ["To make computers faster", "To protect systems and data from digital attacks", "To build new websites", "To sell antivirus software"],
+              "correct_index": 1,
+              "explanation": "Cybersecurity focuses on defending computers, servers, mobile devices, electronic systems, networks, and data from malicious attacks."
+            }
+          },
+          {
+            "id": "u1_m1_l2",
+            "title": "The CIA Triad (Core Principles)",
+            "cards": [
+              {
+                "id": "u1_m1_l2_c1",
+                "title": "Confidentiality",
+                "body": "Keeping information private. Only authorized people should access it. Tools: Strong passwords, Encryption, and 2FA. Example: Your email should only be accessible by you."
+              },
+              {
+                "id": "u1_m1_l2_c2",
+                "title": "Integrity",
+                "body": "Ensuring data is correct and untampered. Data should not be changed by unauthorized users. Example: Your exam marks or bank balance should not be altered by hackers."
+              },
+              {
+                "id": "u1_m1_l2_c3",
+                "title": "Availability",
+                "body": "Systems and data must be accessible when needed. Tools: Backups and maintenance. Example: Online banking and ATMs should be available 24/7."
+              }
+            ],
+            "quiz": {
+              "question": "Which pillar of the CIA Triad is violated if a hacker changes the grades in a university database?",
+              "options": ["Confidentiality", "Integrity", "Availability", "Authentication"],
+              "correct_index": 1,
+              "explanation": "Integrity ensures data is accurate and untampered. Changing data without authorization is a direct violation of integrity."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u1_m2",
+        "title": "Types of Cyber Security",
+        "description": "From networks to your pocket: the different domains of protection.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u1_m2_l1",
+            "title": "Network & Cloud Security",
+            "cards": [
+              {
+                "id": "u1_m2_l1_c1",
+                "title": "Network Security",
+                "body": "Protects internet connections from unauthorized access. Tools: Firewalls (digital borders), VPNs (secure tunnels), and IDS (Intrusion Detection Systems)."
+              },
+              {
+                "id": "u1_m2_l1_c2",
+                "title": "Cloud Security",
+                "body": "Protects data stored online (Google Drive, AWS). It allows access from anywhere but requires strong passwords and 2FA to prevent exposure."
+              }
+            ],
+            "quiz": {
+              "question": "What acts as a digital border to block unauthorized traffic into a network?",
+              "options": ["VPN", "Firewall", "Router", "Antivirus"],
+              "correct_index": 1,
+              "explanation": "A firewall monitors and filters incoming and outgoing network traffic based on established security policies."
+            }
+          },
+          {
+            "id": "u1_m2_l2",
+            "title": "Application & Data Security",
+            "cards": [
+              {
+                "id": "u1_m2_l2_c1",
+                "title": "Application Security",
+                "body": "Focuses on protecting apps. Includes secure design, regular updates, and bug fixing. Tip: Only download apps from trusted stores like Google Play."
+              },
+              {
+                "id": "u1_m2_l2_c2",
+                "title": "Information (Data) Security",
+                "body": "Protects data from being accessed or changed. Uses Encryption (making data unreadable) and Access Control (restricting who can see what)."
+              }
+            ],
+            "quiz": {
+              "question": "What is the process of converting data into a secret, unreadable code called?",
+              "options": ["Hashing", "Encryption", "Backing up", "Scanning"],
+              "correct_index": 1,
+              "explanation": "Encryption makes data unreadable to anyone who doesn't have the key, protecting it from unauthorized access."
+            }
+          },
+          {
+            "id": "u1_m2_l3",
+            "title": "Endpoint, IoT & OpSec",
+            "cards": [
+              {
+                "id": "u1_m2_l3_c1",
+                "title": "Endpoint & IoT Security",
+                "body": "Endpoint protects devices (phones, laptops) using Antivirus. IoT Security protects smart devices (TVs, watches). Tip: Always change default passwords on smart home devices."
+              },
+              {
+                "id": "u1_m2_l3_c2",
+                "title": "Operational Security (OpSec)",
+                "body": "How organizations manage data internally. Includes rules for access and employee training. Tip: Avoid sharing sensitive info publicly in daily life."
+              }
+            ],
+            "quiz": {
+              "question": "Which of these is a critical first step for securing a new Smart TV or IoT device?",
+              "options": ["Connect it to guest Wi-Fi", "Change the default password", "Keep it off the internet", "Nothing is needed"],
+              "correct_index": 1,
+              "explanation": "Hackers can easily find default passwords for smart devices. Changing them is the first line of defense."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u1_m3",
+        "title": "Hackers vs Ethical Hackers",
+        "description": "Understanding the mindset: the good, the bad, and the grey.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u1_m3_l1",
+            "title": "The Colors of Hacking",
+            "cards": [
+              {
+                "id": "u1_m3_l1_c1",
+                "title": "Black Hat Hackers",
+                "body": "Criminals who break into systems for illegal purposes like stealing data or money. They are the 'villains' who exploit vulnerabilities."
+              },
+              {
+                "id": "u1_m3_l1_c2",
+                "title": "White Hat (Ethical) Hackers",
+                "body": "The 'heroes'. They use the same skills as Black Hats but with permission and for good. They find weaknesses so they can be fixed."
+              },
+              {
+                "id": "u1_m3_l1_c3",
+                "title": "Grey Hat Hackers",
+                "body": "They live in the middle. They might hack a system without permission to show the owner the weakness, but they don't do it to steal."
+              }
+            ],
+            "quiz": {
+              "question": "A hacker who exposes a vulnerability to a company without their permission, but without malicious intent, is called a:",
+              "options": ["White Hat", "Black Hat", "Grey Hat", "Blue Hat"],
+              "correct_index": 2,
+              "explanation": "Grey Hats operate without formal authorization but usually don't have the malicious intent of a Black Hat."
+            }
+          },
+          {
+            "id": "u1_m3_l2",
+            "title": "The 10 Types of Hackers",
+            "cards": [
+              {
+                "id": "u1_m3_l2_c1",
+                "title": "Beginners & Learners",
+                "body": "Script Kiddies use pre-made tools without deep knowledge. Green Hat Hackers are new learners actively trying to gain skills."
+              },
+              {
+                "id": "u1_m3_l2_c2",
+                "title": "Nation-State & Hacktivists",
+                "body": "State-Sponsored hackers work for governments for spying. Hacktivists hack systems to promote political or social causes."
+              },
+              {
+                "id": "u1_m3_l2_c3",
+                "title": "The Defenders",
+                "body": "Red Hat Hackers aggressively target black-hats to stop them. Blue Hat Hackers are security pros invited to test software before it's released."
+              }
+            ],
+            "quiz": {
+              "question": "Which type of hacker is motivated by political or social causes?",
+              "options": ["Script Kiddie", "Hacktivist", "Blue Hat", "Green Hat"],
+              "correct_index": 1,
+              "explanation": "Hacktivists use hacking as a form of activism to bring attention to social or political issues."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u1_m4",
+        "title": "Why Students are Vulnerable",
+        "description": "The 'Perfect Storm' of access and inexperience.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u1_m4_l1",
+            "title": "The Gateway to the Kingdom",
+            "cards": [
+              {
+                "id": "u1_m4_l1_c1",
+                "title": "Valuable Access",
+                "body": "Students aren't just targets; they are keys. Their credentials grant access to University Wi-Fi, VPNs, and massive research databases worth millions."
+              },
+              {
+                "id": "u1_m4_l1_c2",
+                "title": "PII Goldmines",
+                "body": "Student records contain Names, SSNs, addresses, and financial data (FAFSA). This information is highly valuable for identity theft and tax fraud."
+              }
+            ],
+            "quiz": {
+              "question": "Why are student accounts considered 'gateways' for hackers?",
+              "options": ["Students have a lot of money", "They provide access to university networks and research", "Students always have the latest tech", "They use the internet more than adults"],
+              "correct_index": 1,
+              "explanation": "A student's login can give an attacker a legitimate foothold inside a massive, high-value university network."
+            }
+          },
+          {
+            "id": "u1_m4_l2",
+            "title": "The Tech Factor",
+            "cards": [
+              {
+                "id": "u1_m4_l2_c1",
+                "title": "Pirated Software",
+                "body": "To save money, students often download 'cracked' software or free streaming tools. These are classic vectors for malware and keyloggers."
+              },
+              {
+                "id": "u1_m4_l2_c2",
+                "title": "Unsecured Public Wi-Fi",
+                "body": "Connecting from coffee shops without a VPN allows attackers to perform Man-in-the-Middle (MitM) attacks to intercept your traffic."
+              }
+            ],
+            "quiz": {
+              "question": "What is a common danger of using pirated or 'cracked' software?",
+              "options": ["It might be slow", "It often contains hidden malware or backdoors", "It takes up too much RAM", "It's hard to install"],
+              "correct_index": 1,
+              "explanation": "Hackers frequently hide malware inside free/pirated software to infect users who are looking for a bargain."
+            }
+          },
+          {
+            "id": "u1_m4_l3",
+            "title": "Practical Defenses",
+            "cards": [
+              {
+                "id": "u1_m4_l3_c1",
+                "title": "MFA & Password Managers",
+                "body": "Enable Multi-Factor Authentication (MFA) on all accounts. Use a password manager like Bitwarden to avoid reusing passwords."
+              },
+              {
+                "id": "u1_m4_l3_c2",
+                "title": "If You Are Hacked",
+                "body": "1. Turn off internet immediately. 2. Enable/Check your Firewall. 3. Change all passwords from a different, clean device. 4. Report it to your IT department."
+              }
+            ],
+            "quiz": {
+              "question": "What is the very first thing you should do if you suspect your device is hacked?",
+              "options": ["Change your password on that device", "Disconnect the internet", "Email your friends", "Call the police"],
+              "correct_index": 1,
+              "explanation": "Disconnecting the internet stops the hacker from further accessing your data or controlling your device."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u1_m5",
+        "title": "Real-life Case Studies",
+        "description": "Learning from history's biggest cyber crimes.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u1_m5_l1",
+            "title": "Global Ransomware & Breaches",
+            "cards": [
+              {
+                "id": "u1_m5_l1_c1",
+                "title": "WannaCry (2017)",
+                "body": "A global attack that infected 200,000+ computers. It used a Windows vulnerability to lock files for Bitcoin ransom, crippling UK hospitals."
+              },
+              {
+                "id": "u1_m5_l1_c2",
+                "title": "The Equifax Breach",
+                "body": "Personal data of 147 million people stolen because of an unpatched web vulnerability. It led to a $700 million fine and massive identity theft risks."
+              }
+            ],
+            "quiz": {
+              "question": "What was the main lesson from the WannaCry attack?",
+              "options": ["Never use Windows", "Bitcoin is dangerous", "Always update software and apply security patches", "Hospitals shouldn't use computers"],
+              "correct_index": 2,
+              "explanation": "WannaCry spread using a vulnerability in older Windows systems that had already received a security patch, but many systems hadn't updated."
+            }
+          },
+          {
+            "id": "u1_m5_l2",
+            "title": "Privacy & Data Leaks",
+            "cards": [
+              {
+                "id": "u1_m5_l2_c1",
+                "title": "The Aadhaar Leak (India)",
+                "body": "A vulnerability allowed access to the private data of over 1 billion citizens. It highlighted the risk of centralized national databases."
+              },
+              {
+                "id": "u1_m5_l2_c2",
+                "title": "Cambridge Analytica",
+                "body": "A quiz app on Facebook harvested data of 87 million users for political profiling. It showed that 'free' apps often trade your privacy for data."
+              }
+            ],
+            "quiz": {
+              "question": "How did Cambridge Analytica obtain user data?",
+              "options": ["Hacking Facebook servers", "Through a quiz app", "Buying it from the government", "Stealing hard drives"],
+              "correct_index": 1,
+              "explanation": "They used a personality quiz app that gathered not just the user's data, but also data from their entire friend list."
+            }
+          },
+          {
+            "id": "u1_m5_l3",
+            "title": "Phishing & Corporate Scams",
+            "cards": [
+              {
+                "id": "u1_m5_l3_c1",
+                "title": "Jamtara Phishing (India)",
+                "body": "A small village became a phishing capital, stealing OTPs by pretending to be bank officers. It's a prime example of successful social engineering."
+              },
+              {
+                "id": "u1_m5_l3_c2",
+                "title": "The Uber Cover-up",
+                "body": "Hackers stole data of 57 million users. Uber paid $100,000 to hide it instead of reporting. Transparency and reporting are essential after a hack."
+              }
+            ],
+            "quiz": {
+              "question": "What was the main method used in the Jamtara scams?",
+              "options": ["Advanced malware", "Vishing (Voice Phishing) to steal OTPs", "Hardware hacking", "Wi-Fi sniffing"],
+              "correct_index": 1,
+              "explanation": "Jamtara scammers used social engineering and phone calls to trick people into giving up their sensitive bank details."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unit_02",
+    "title": "Unit 2: Linux Basics for Cyber Security",
+    "description": "Mastering the preferred operating system of security professionals.",
+    "modules": [
+      {
+        "id": "u2_m1",
+        "title": "OS Fundamentals & Linux Importance",
+        "description": "The foundation of computing and why Linux rules the security world.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u2_m1_l1",
+            "title": "What is an Operating System?",
+            "cards": [
+              {
+                "id": "u2_m1_l1_c1",
+                "title": "The Intermediary",
+                "body": "An OS acts as a bridge between the user and the computer hardware. It manages resources like CPU, memory, and storage, making it easier to run applications."
+              },
+              {
+                "id": "u2_m1_l1_c2",
+                "title": "Core Functions",
+                "body": "The OS handles: 1. Security (Firewalls), 2. Memory Management, 3. Process Management (Multitasking), and 4. Device/File Management."
+              },
+              {
+                "id": "u2_m1_l1_c3",
+                "title": "Types of OS",
+                "body": "Modern systems include Multi-user (Linux/Windows), Real-Time (Robotics/Medical), and Mobile (Android/iOS). Each is optimized for specific tasks."
+              }
+            ],
+            "quiz": {
+              "question": "Which type of OS is designed to execute tasks within a guaranteed, strict time limit?",
+              "options": ["Batch OS", "Multi-user OS", "Real-Time OS (RTOS)", "Network OS"],
+              "correct_index": 2,
+              "explanation": "RTOS is used in mission-critical systems like medical devices and air traffic control where timing is everything."
+            }
+          },
+          {
+            "id": "u2_m1_l2",
+            "title": "Why Linux for Security?",
+            "cards": [
+              {
+                "id": "u2_m1_l2_c1",
+                "title": "Open Source Transparency",
+                "body": "Since the source code is public, security experts can audit it for backdoors. Patches for vulnerabilities are often released within days, not months."
+              },
+              {
+                "id": "u2_m1_l2_c2",
+                "title": "Granular Permissions",
+                "body": "Linux follows a strict permission model (Owner/Group/Others). Malware can't easily install itself system-wide because system files require 'Root' (Sudo) access."
+              },
+              {
+                "id": "u2_m1_l2_c3",
+                "title": "Native Security Tools",
+                "body": "Over 90% of security tools (Nmap, Wireshark, Metasploit) are Linux-native. They require low-level system access that Windows often restricts."
+              }
+            ],
+            "quiz": {
+              "question": "Why is 'Open Source' considered a security advantage for Linux?",
+              "options": ["It's free to download", "Anyone can audit the code for vulnerabilities", "It has more games", "It doesn't need updates"],
+              "correct_index": 1,
+              "explanation": "Transparency allows the global security community to find and fix bugs much faster than proprietary software companies."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u2_m2",
+        "title": "Kali Linux Overview",
+        "description": "Introduction to the industry-standard OS for penetration testing.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u2_m2_l1",
+            "title": "The Swiss Army Knife",
+            "cards": [
+              {
+                "id": "u2_m2_l1_c1",
+                "title": "What is Kali Linux?",
+                "body": "Maintained by Offensive Security, it's a Debian-based distribution pre-loaded with hundreds of tools for pentesting, forensics, and reverse engineering."
+              },
+              {
+                "id": "u2_m2_l1_c2",
+                "title": "Key Features",
+                "body": "1. 600+ Security Tools. 2. Custom Kernel (supports Wi-Fi injection). 3. 'Undercover Mode' to look like Windows. 4. Live Boot (runs from USB without trace)."
+              }
+            ],
+            "quiz": {
+              "question": "What is the primary purpose of 'Kali Undercover' mode?",
+              "options": ["To hide from hackers", "To make the desktop look like Windows", "To encrypt all files", "To speed up the system"],
+              "correct_index": 1,
+              "explanation": "Undercover mode helps security pros blend in when working in public places by mimicking a standard Windows environment."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u2_m3",
+        "title": "Linux File System & Navigation",
+        "description": "Learning the tree structure and the power of the command line.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u2_m3_l1",
+            "title": "The File System Hierarchy",
+            "cards": [
+              {
+                "id": "u2_m3_l1_c1",
+                "title": "Everything is a File",
+                "body": "In Linux, everything starts at '/' (Root). '/home' is for users, '/etc' for config files, and '/var/log' is where the system logs its activity."
+              },
+              {
+                "id": "u2_m3_l1_c2",
+                "title": "Important Folders",
+                "body": "1. /bin: Basic commands (ls, cp). 2. /etc: Password/Network settings. 3. /var: Changing data (logs). 4. /root: The superuser's home."
+              }
+            ],
+            "quiz": {
+              "question": "Which directory contains system configuration files like network settings and passwords?",
+              "options": ["/bin", "/home", "/etc", "/var"],
+              "correct_index": 2,
+              "explanation": "/etc is the central location for all system-wide configuration files in Linux."
+            }
+          },
+          {
+            "id": "u2_m3_l2",
+            "title": "Essential Commands",
+            "cards": [
+              {
+                "id": "u2_m3_l2_c1",
+                "title": "Navigating & Viewing",
+                "body": "'ls' lists files. 'cd' changes directory. 'pwd' shows your current path. 'cat' prints the content of a file to your screen."
+              },
+              {
+                "id": "u2_m3_l2_c2",
+                "title": "Managing Files",
+                "body": "'mkdir' creates folders. 'touch' creates empty files. 'cp' copies, 'mv' moves/renames, and 'rm' deletes. Use 'rm -r' to delete folders."
+              }
+            ],
+            "quiz": {
+              "question": "Which command tells you exactly what type of data a file contains (regardless of its extension)?",
+              "options": ["ls", "cat", "file", "type"],
+              "correct_index": 2,
+              "explanation": "The 'file' command looks at the file's internal header to determine its true type, helping detect hidden malware."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u2_m4",
+        "title": "Permissions & User Management",
+        "description": "Mastering access control and the power of the Root user.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u2_m4_l1",
+            "title": "Root vs Normal User",
+            "cards": [
+              {
+                "id": "u2_m4_l1_c1",
+                "title": "The Superuser (Root)",
+                "body": "Root has total control. It can delete anything and access any file. Standard users are restricted to their /home folder for safety."
+              },
+              {
+                "id": "u2_m4_l1_c2",
+                "title": "Sudo (Superuser Do)",
+                "body": "Instead of staying logged in as root (risky!), users use 'sudo' to run specific commands with root privileges. This is safer and logs every action."
+              }
+            ],
+            "quiz": {
+              "question": "What is the safest way to perform administrative tasks in Linux?",
+              "options": ["Log in as Root", "Use 'sudo' before a command", "Delete the password", "Use a Guest account"],
+              "correct_index": 1,
+              "explanation": "Sudo allows temporary elevated privileges without the extreme risk of staying logged in as the all-powerful Root user."
+            }
+          },
+          {
+            "id": "u2_m4_l2",
+            "title": "Understanding Permissions",
+            "cards": [
+              {
+                "id": "u2_m4_l2_c1",
+                "title": "Read, Write, Execute",
+                "body": "Permissions are set for Owner, Group, and Others. 'r' (read=4), 'w' (write=2), 'x' (execute=1). Together they form a 3-digit number (e.g., 755)."
+              },
+              {
+                "id": "u2_m4_l2_c2",
+                "title": "Chmod & Chown",
+                "body": "'chmod' changes file permissions (like chmod 700 for privacy). 'chown' changes the owner of a file. These are vital for securing data."
+              }
+            ],
+            "quiz": {
+              "question": "What does the numeric permission '755' mean?",
+              "options": ["Everyone has full access", "Owner has full (7), Group/Others can Read/Execute (5)", "Only owner has access", "No one can read the file"],
+              "correct_index": 1,
+              "explanation": "7 (4+2+1) means rwx. 5 (4+1) means r-x. So Owner has full, others can read/run but not modify."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u2_m5",
+        "title": "Software & System Logs",
+        "description": "Installing tools and tracking every move on the system.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u2_m5_l1",
+            "title": "Package Management (APT)",
+            "cards": [
+              {
+                "id": "u2_m5_l1_c1",
+                "title": "What is APT?",
+                "body": "Advanced Package Tool. It handles installing and updating software from trusted 'Repositories' (online app stores for Linux)."
+              },
+              {
+                "id": "u2_m5_l1_c2",
+                "title": "Core Commands",
+                "body": "'sudo apt update' refreshes the list. 'sudo apt install <name>' adds software. 'sudo apt upgrade' installs latest security patches."
+              }
+            ],
+            "quiz": {
+              "question": "Which command should you run first before installing any new software via APT?",
+              "options": ["apt remove", "apt update", "apt purge", "apt clear"],
+              "correct_index": 1,
+              "explanation": "'apt update' synchronizes your local list of packages with the online servers to ensure you get the latest version."
+            }
+          },
+          {
+            "id": "u2_m5_l2",
+            "title": "Logs & Monitoring",
+            "cards": [
+              {
+                "id": "u2_m5_l2_c1",
+                "title": "The Digital Trail",
+                "body": "Logs are the history of the system. Found in /var/log/. 'auth.log' tracks login attempts. 'syslog' records general events."
+              },
+              {
+                "id": "u2_m5_l2_c2",
+                "title": "Live Monitoring",
+                "body": "'tail -f /var/log/auth.log' shows login attempts as they happen. This is how security pros spot brute-force attacks in real-time."
+              }
+            ],
+            "quiz": {
+              "question": "Which log file is most important for investigating unauthorized login attempts?",
+              "options": ["/var/log/kern.log", "/var/log/auth.log", "/var/log/dpkg.log", "/var/log/boot.log"],
+              "correct_index": 1,
+              "explanation": "auth.log (or secure log in some systems) tracks every authentication attempt, success or failure."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unit_03",
+    "title": "Unit 3: Security Concepts & Principles",
+    "description": "Deep dive into the CIA Triad and the pillars of digital trust.",
+    "modules": [
+      {
+        "id": "u3_m1",
+        "title": "Confidentiality & Access Control",
+        "description": "Ensuring only authorized eyes see your data.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u3_m1_l1",
+            "title": "Mechanisms of Confidentiality",
+            "cards": [
+              {
+                "id": "u3_m1_l1_c1",
+                "title": "Password Protection",
+                "body": "The first line of defense. A secret known only to the user to prove identity. Example: Online banking requires a strong password to hide your balance from others."
+              },
+              {
+                "id": "u3_m1_l1_c2",
+                "title": "Encryption",
+                "body": "Scrambling data so it's unreadable without a key. Encryption 'at rest' protects stored files, while encryption 'in transit' (like HTTPS/TLS) protects data moving over the web."
+              }
+            ],
+            "quiz": {
+              "question": "Which mechanism protects your data while it travels over public Wi-Fi?",
+              "options": ["Password Protection", "Encryption in transit", "Physical Security", "Audit Logs"],
+              "correct_index": 1,
+              "explanation": "Encryption in transit (like TLS/HTTPS) ensures that even if traffic is intercepted, the content remains unreadable."
+            }
+          },
+          {
+            "id": "u3_m1_l2",
+            "title": "Types of Access Control",
+            "cards": [
+              {
+                "id": "u3_m1_l2_c1",
+                "title": "DAC (Discretionary)",
+                "body": "Least restrictive. The file owner decides who has access. Example: In Linux, you use 'chmod' to give a friend read access to your document."
+              },
+              {
+                "id": "u3_m1_l2_c2",
+                "title": "MAC (Mandatory)",
+                "body": "Most restrictive. The system enforces access based on security labels (Top Secret, Secret). Common in military and government systems."
+              },
+              {
+                "id": "u3_m1_l2_c3",
+                "title": "RBAC (Role-Based)",
+                "body": "Permissions are tied to roles, not people. Example: A 'Manager' role can see salaries, but an 'Intern' role cannot. Very popular in businesses."
+              }
+            ],
+            "quiz": {
+              "question": "In which access control model does the system owner define fixed parameters that users cannot bypass?",
+              "options": ["DAC", "RBAC", "MAC", "Rule-based"],
+              "correct_index": 2,
+              "explanation": "Mandatory Access Control (MAC) is the most restrictive; it uses system-enforced labels that users cannot alter."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u3_m2",
+        "title": "Integrity & Availability",
+        "description": "Keeping data accurate and services running.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u3_m2_l1",
+            "title": "Ensuring Data Integrity",
+            "cards": [
+              {
+                "id": "u3_m2_l1_c1",
+                "title": "Hashing & Checksums",
+                "body": "Hashing (SHA-256) creates a unique 'fingerprint' for a file. If even one bit changes, the hash changes completely. This proves the file hasn't been tampered with."
+              },
+              {
+                "id": "u3_m2_l1_c2",
+                "title": "Digital Signatures",
+                "body": "Combines hashing with encryption. It proves two things: the sender's identity and that the message hasn't been changed since it was signed."
+              }
+            ],
+            "quiz": {
+              "question": "What is the primary use of a 'Checksum' in networking?",
+              "options": ["To encrypt data", "To detect errors or tampering in data packets", "To hide the sender's IP", "To speed up the connection"],
+              "correct_index": 1,
+              "explanation": "Checksums are used for error detection. If the computed checksum doesn't match the one in the packet, the data is considered corrupted."
+            }
+          },
+          {
+            "id": "u3_m2_l2",
+            "title": "Maximizing Availability",
+            "cards": [
+              {
+                "id": "u3_m2_l2_c1",
+                "title": "Redundancy & Backups",
+                "body": "The 3-2-1 Rule: 3 copies of data, 2 different media types, 1 copy offsite. This ensures you can recover from ransomware or hardware failure."
+              },
+              {
+                "id": "u3_m2_l2_c2",
+                "title": "Load Balancing & DDoS Defense",
+                "body": "Load balancers spread traffic across multiple servers to prevent overload. DDoS mitigation (like Cloudflare) filters out junk traffic designed to crash your site."
+              }
+            ],
+            "quiz": {
+              "question": "Which of these is a direct attack on 'Availability'?",
+              "options": ["Phishing", "DDoS Attack", "SQL Injection", "Password Cracking"],
+              "correct_index": 1,
+              "explanation": "A Distributed Denial of Service (DDoS) attack floods a server with traffic to make it unavailable to legitimate users."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u3_m3",
+        "title": "Advanced Authentication",
+        "description": "Modern ways to prove who you are.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u3_m3_l1",
+            "title": "Beyond Passwords",
+            "cards": [
+              {
+                "id": "u3_m3_l1_c1",
+                "title": "Biometrics & Tokens",
+                "body": "Biometrics use 'something you are' (fingerprint, FaceID). Security tokens (like YubiKey) are 'something you have'. These are much harder to steal than passwords."
+              },
+              {
+                "id": "u3_m3_l1_c2",
+                "title": "Single Sign-On (SSO)",
+                "body": "One login to access everything. It reduces 'password fatigue' but creates a 'single point of failure' if the main account is hacked."
+              }
+            ],
+            "quiz": {
+              "question": "What is a major security risk of Single Sign-On (SSO)?",
+              "options": ["Users forget their passwords more often", "It's too expensive", "If the central account is compromised, all connected apps are at risk", "It makes the network slower"],
+              "correct_index": 2,
+              "explanation": "Since SSO grants access to many services with one login, that single account becomes a high-value target for hackers."
+            }
+          },
+          {
+            "id": "u3_m3_l2",
+            "title": "CAPTCHA & Login Alerts",
+            "cards": [
+              {
+                "id": "u3_m3_l2_c1",
+                "title": "What is CAPTCHA?",
+                "body": "It stands for 'Completely Automated Public Turing test to tell Computers and Humans Apart'. It blocks bots from spamming or brute-forcing login pages."
+              },
+              {
+                "id": "u3_m3_l2_c2",
+                "title": "Verification Codes",
+                "body": "Risk-based security. If you log in from a new city, the app asks for a code sent to your phone. This stops hackers who have your password but not your device."
+              }
+            ],
+            "quiz": {
+              "question": "What does an 'Invisible CAPTCHA' monitor to tell if you are human?",
+              "options": ["Your browsing history", "Behavior patterns like mouse movements and typing speed", "Your webcam", "Your social media profile"],
+              "correct_index": 1,
+              "explanation": "Invisible CAPTCHAs use background signals like mouse randomness and scrolling patterns to detect bots without annoying users."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u3_m4",
+        "title": "The Art of Non-Repudiation",
+        "description": "Making it impossible to deny an action.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u3_m4_l1",
+            "title": "Proof of Action",
+            "cards": [
+              {
+                "id": "u3_m4_l1_c1",
+                "title": "What is Non-Repudiation?",
+                "body": "Ensuring that someone cannot deny an action they performed (like sending an email or making a payment). It's the 'digital receipt' that holds up in court."
+              },
+              {
+                "id": "u3_m4_l1_c2",
+                "title": "Transaction Logs",
+                "body": "Immutable records of 'Who, What, When, Where'. In high-security systems, these logs are 'hashed' and chained so they cannot be edited later."
+              }
+            ],
+            "quiz": {
+              "question": "Which of these provides the strongest technical proof for non-repudiation?",
+              "options": ["A verbal agreement", "A cryptographically signed digital document", "A screenshot of an email", "A typed name at the end of a document"],
+              "correct_index": 1,
+              "explanation": "Digital signatures using PKI provide mathematical proof of intent and identity that is very difficult to legally deny."
+            }
+          },
+          {
+            "id": "u3_m4_l2",
+            "title": "PKI & E-Signs",
+            "cards": [
+              {
+                "id": "u3_m4_l2_c1",
+                "title": "Public Key Infrastructure (PKI)",
+                "body": "The system that manages digital certificates. It's like a 'digital ID office' that verifies your identity and gives you a private key for signing."
+              },
+              {
+                "id": "u3_m4_l2_c2",
+                "title": "E-Sign vs Digital Signature",
+                "body": "An E-sign is just a typed name or checkbox (weak). A Digital Signature uses advanced math to link your identity to the document content (strong)."
+              }
+            ],
+            "quiz": {
+              "question": "What is the role of a Certificate Authority (CA) in PKI?",
+              "options": ["To build websites", "To act as a trusted third party that issues digital IDs", "To scan for viruses", "To reset user passwords"],
+              "correct_index": 1,
+              "explanation": "A CA (like DigiCert) verifies your identity and issues a digital certificate, acting as the 'Root of Trust' for the internet."
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

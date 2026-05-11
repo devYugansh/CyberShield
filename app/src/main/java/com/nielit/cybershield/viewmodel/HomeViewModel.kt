@@ -18,7 +18,7 @@ import javax.inject.Inject
 sealed interface HomeUiState {
     object Loading : HomeUiState
     data class Success(
-        val modules: List<Module>,
+        val units: List<com.nielit.cybershield.domain.model.CourseUnit>,
         val lessonCompletionMap: Map<String, Boolean>,
         val overallProgress: Float
     ) : HomeUiState
@@ -52,20 +52,28 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = HomeUiState.Loading
             combine(
-                flowOf(contentRepository.modules),
+                flowOf(contentRepository.units),
                 contentRepository.completedLessonsFlow()
-            ) { dataModules, completedIds ->
+            ) { dataUnits, completedIds ->
                 try {
-                    val domainModules = dataModules.map { dm ->
-                        Module(
-                            id = dm.id,
-                            title = dm.title,
-                            isPro = dm.isPro,
-                            lessons = dm.lessons.map { dl ->
-                                Lesson(
-                                    id = dl.id,
-                                    moduleId = dm.id,
-                                    title = dl.title
+                    val domainUnits = dataUnits.map { du ->
+                        com.nielit.cybershield.domain.model.CourseUnit(
+                            id = du.id,
+                            title = du.title,
+                            description = du.description,
+                            modules = du.modules.map { dm ->
+                                Module(
+                                    id = dm.id,
+                                    title = dm.title,
+                                    description = dm.description,
+                                    isPro = dm.isPro,
+                                    lessons = dm.lessons.map { dl ->
+                                        Lesson(
+                                            id = dl.id,
+                                            moduleId = dm.id,
+                                            title = dl.title
+                                        )
+                                    }
                                 )
                             }
                         )
@@ -75,19 +83,21 @@ class HomeViewModel @Inject constructor(
                     var totalLessons = 0
                     var completedCount = 0
 
-                    domainModules.forEach { module ->
-                        module.lessons.forEach { lesson ->
-                            totalLessons++
-                            val isComplete = completedIds.contains(lesson.id)
-                            completionMap[lesson.id] = isComplete
-                            if (isComplete) completedCount++
+                    domainUnits.forEach { unit ->
+                        unit.modules.forEach { module ->
+                            module.lessons.forEach { lesson ->
+                                totalLessons++
+                                val isComplete = completedIds.contains(lesson.id)
+                                completionMap[lesson.id] = isComplete
+                                if (isComplete) completedCount++
+                            }
                         }
                     }
 
                     val progress = if (totalLessons == 0) 0f else (completedCount.toFloat() / totalLessons) * 100f
 
                     HomeUiState.Success(
-                        modules = domainModules,
+                        units = domainUnits,
                         lessonCompletionMap = completionMap,
                         overallProgress = progress
                     )

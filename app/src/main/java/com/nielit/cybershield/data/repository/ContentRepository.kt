@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import com.nielit.cybershield.data.model.CourseUnit
 import com.nielit.cybershield.data.model.Module
 import com.nielit.cybershield.data.model.ModuleProgress
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 
 /**
  * Single source of truth for:
- *  - Module / lesson content  → loaded once from assets/modules.json
+ *  - Course content (Units -> Modules -> Lessons) → loaded from assets/modules.json
  *  - Lesson completion state  → persisted in DataStore as Set<String>
  */
 @Singleton
@@ -28,11 +29,14 @@ class ContentRepository @Inject constructor(
 
     // ── Content ───────────────────────────────────────────────────────────
 
-    /** Loaded once; safe to call repeatedly (result is the same object). */
-    val modules: List<Module> by lazy {
-        val raw = context.assets.open("modules.json").bufferedReader().readText()
-        json.decodeFromString(raw)
+    /** All units in the course. */
+    val units: List<CourseUnit> by lazy {
+        val raw = context.assets.open("units.json").bufferedReader().readText()
+        json.decodeFromString<List<CourseUnit>>(raw)
     }
+
+    /** Flattened list of all modules across all units. */
+    val modules: List<Module> get() = units.flatMap { it.modules }
 
     fun moduleById(id: String): Module? = modules.find { it.id == id }
 

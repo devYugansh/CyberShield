@@ -6,9 +6,18 @@ import kotlinx.serialization.Serializable
 // ── Content models ────────────────────────────────────────────────────────────
 
 @Serializable
+data class CourseUnit(
+    val id          : String,
+    val title       : String,
+    val description : String,
+    val modules     : List<Module> = emptyList()
+)
+
+@Serializable
 data class Module(
     val id          : String,
     val title       : String,
+    val description : String = "",
     @SerialName("is_pro")
     val isPro       : Boolean = false,
     val lessons     : List<Lesson> = emptyList()
