@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -169,6 +170,9 @@ private fun HomeSuccessContent(
     // Track which module is expanded (accordion: only one at a time)
     var expandedModuleId by remember { mutableStateOf<String?>(null) }
 
+    val completedCount = completedMap.count { it.value }
+    val totalLessons = units.sumOf { it.modules.sumOf { m -> m.lessons.size } }
+
     LazyColumn(
         contentPadding = PaddingValues(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -178,6 +182,8 @@ private fun HomeSuccessContent(
         item {
             ProgressSection(
                 overallProgress = overallProgress,
+                completedCount  = completedCount,
+                totalLessons    = totalLessons,
                 modifier        = Modifier.padding(horizontal = 16.dp)
             )
         }
@@ -244,115 +250,98 @@ private fun UnitHeader(unit: CourseUnit) {
 @Composable
 fun ProgressSection(
     overallProgress: Float,
-    modifier       : Modifier = Modifier
+    completedCount: Int,
+    totalLessons: Int,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        shape    = MaterialTheme.shapes.medium,
+        shape    = RoundedCornerShape(24.dp),
         colors   = CardDefaults.cardColors(containerColor = White),
-        elevation= CardDefaults.cardElevation(defaultElevation = 4.dp),
+        elevation= CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier = modifier
             .fillMaxWidth()
+            .border(1.dp, Border.copy(alpha = 0.4f), RoundedCornerShape(24.dp))
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Surface)
+                .padding(24.dp)
         ) {
-            Column(
+            // Header
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp)
+                    .padding(bottom = 20.dp)
             ) {
-                // Header
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(6.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(Navy)
-                    )
-                    Spacer(Modifier.width(12.dp))
-                    Text(
-                        text = "YOUR LEARNING PROGRESS",
-                        style = MaterialTheme.typography.labelMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp,
-                            color = Navy
-                        )
-                    )
-                }
-
-                // Progress Ring + Stats Container
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(24.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                ) {
-                    // Left: Progress Ring
-                    Box(
-                        modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ProgressRing(
-                            percentage = overallProgress,
-                            size = 140.dp,
-                            strokeWidth = 14.dp,
-                            progressColor = Navy,
-                            trackColor = Border.copy(alpha = 0.3f)
-                        )
-                    }
-
-                    // Right: Stats
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        StatItem(
-                            label = "Overall Progress",
-                            value = "${overallProgress.toInt()}%",
-                            color = Navy
-                        )
-
-                        Divider(
-                            color = Border.copy(alpha = 0.3f),
-                            thickness = 1.dp
-                        )
-
-                        StatItem(
-                            label = "Keep Learning",
-                            value = "Every Day",
-                            color = Blue
-                        )
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                // Motivational message
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = Navy.copy(alpha = 0.05f),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(12.dp)
+                        .size(10.dp)
+                        .clip(CircleShape)
+                        .background(Blue)
+                )
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = "LEARNING DASHBOARD",
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontWeight = FontWeight.ExtraBold,
+                        letterSpacing = 1.2.sp,
+                        color = Navy
+                    )
+                )
+            }
+
+            // Progress Ring + Stats Container
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                // Left: Progress Ring
+                ProgressRing(
+                    percentage = overallProgress,
+                    size = 120.dp,
+                    strokeWidth = 14.dp,
+                    progressColor = Navy,
+                    trackColor = Border.copy(alpha = 0.2f)
+                )
+
+                // Right: Stats
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.padding(start = 16.dp)
                 ) {
-                    Text(
-                        text = "Consistency builds expertise. Great progress so far!",
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = Navy,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                    StatItem(
+                        label = "Lessons Completed",
+                        value = "$completedCount/$totalLessons",
+                        color = Navy
+                    )
+
+                    StatItem(
+                        label = "Daily Goal",
+                        value = "Achieved",
+                        color = Blue
                     )
                 }
+            }
+
+            Spacer(Modifier.height(20.dp))
+
+            // Motivational message
+            Surface(
+                color = Navy.copy(alpha = 0.05f),
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "“The only truly secure system is one that is powered off, cast in a block of concrete and sealed in a lead-lined room...”",
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = Navy,
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 18.sp
+                    ),
+                    modifier = Modifier.padding(16.dp)
+                )
             }
         }
     }
@@ -369,16 +358,17 @@ private fun StatItem(
             text = label,
             style = MaterialTheme.typography.labelSmall.copy(
                 color = MutedText,
-                letterSpacing = 0.5.sp
+                letterSpacing = 0.5.sp,
+                fontWeight = FontWeight.Medium
             )
         )
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(2.dp))
         Text(
             text = value,
-            style = MaterialTheme.typography.headlineMedium.copy(
-                fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.ExtraBold,
                 color = color,
-                fontSize = 20.sp
+                fontSize = 22.sp
             )
         )
     }
@@ -399,12 +389,12 @@ fun ModuleCard(
     modifier      : Modifier = Modifier
 ) {
     Card(
-        shape    = MaterialTheme.shapes.medium,
+        shape    = RoundedCornerShape(24.dp),
         colors   = CardDefaults.cardColors(containerColor = White),
-        elevation= CardDefaults.cardElevation(defaultElevation = 3.dp),
+        elevation= CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, Border.copy(alpha = 0.4f), MaterialTheme.shapes.medium)
+            .border(1.dp, Border.copy(alpha = 0.4f), RoundedCornerShape(24.dp))
     ) {
         Column {
             // Card header (always visible) with Navy left accent
@@ -496,7 +486,7 @@ fun ModuleCard(
                 exit          = shrinkVertically(animationSpec = tween(250))
             ) {
                 Column {
-                    Divider(color = Border, thickness = 1.dp)
+                    HorizontalDivider(color = Border, thickness = 1.dp)
                     module.lessons.forEach { lesson ->
                         LessonRow(
                             lesson      = lesson,
@@ -622,7 +612,7 @@ private fun HomeErrorState(
         modifier = modifier.fillMaxSize().padding(24.dp)
     ) {
         Text(text = message, style = MaterialTheme.typography.bodyMedium, color = MutedText,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+            textAlign = TextAlign.Center)
         Spacer(Modifier.height(16.dp))
         CsPrimaryButton(text = "Retry", onClick = onRetry, modifier = Modifier.width(160.dp))
     }
