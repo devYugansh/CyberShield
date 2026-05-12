@@ -6,6 +6,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.nielit.cybershield.viewmodel.AuthViewModel
 import com.nielit.cybershield.ui.screens.flashcard.FlashcardViewerScreen
 import com.nielit.cybershield.ui.screens.home.HomeScreen
 import com.nielit.cybershield.ui.screens.login.LoginScreen
@@ -18,12 +20,12 @@ import com.nielit.cybershield.ui.screens.splash.SplashScreen
 object Routes {
     const val SPLASH   = "splash"
     const val LOGIN    = "login"
-    const val OTP      = "otp/{verificationId}"
+    const val OTP      = "otp/{verificationId}/{phone}"
     const val HOME     = "home"
     const val FLASHCARD= "flashcard/{moduleId}/{lessonId}"
     const val SETTINGS = "settings"
 
-    fun otp(verificationId: String)                      = "otp/$verificationId"
+    fun otp(verificationId: String, phone: String)       = "otp/$verificationId/$phone"
     fun flashcard(moduleId: String, lessonId: String)    = "flashcard/$moduleId/$lessonId"
 }
 
@@ -55,20 +57,27 @@ fun CyberShieldNavHost(
         }
 
         composable(Routes.LOGIN) {
+            val viewModel: AuthViewModel = hiltViewModel()
             LoginScreen(
                 onOtpSent = { verificationId ->
-                    navController.navigate(Routes.otp(verificationId))
-                }
+                    navController.navigate(Routes.otp(verificationId, viewModel.phoneNumber.value))
+                },
+                viewModel = viewModel
             )
         }
 
         composable(
             route     = Routes.OTP,
-            arguments = listOf(navArgument("verificationId") { type = NavType.StringType })
+            arguments = listOf(
+                navArgument("verificationId") { type = NavType.StringType },
+                navArgument("phone")          { type = NavType.StringType }
+            )
         ) { backStack ->
             val verificationId = backStack.arguments?.getString("verificationId").orEmpty()
+            val phone          = backStack.arguments?.getString("phone").orEmpty()
             OtpVerifyScreen(
                 verificationId = verificationId,
+                phone          = phone,
                 onVerified     = {
                     navController.navigate(Routes.HOME) {
                         popUpTo(Routes.LOGIN) { inclusive = true }

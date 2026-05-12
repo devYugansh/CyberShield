@@ -13,7 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalContext
+import android.app.Activity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +33,7 @@ import com.nielit.cybershield.viewmodel.AuthViewModel
 @Composable
 fun OtpVerifyScreen(
     verificationId: String,
+    phone         : String,
     onVerified    : () -> Unit,
     viewModel     : AuthViewModel = hiltViewModel()
 ) {
@@ -40,6 +42,14 @@ fun OtpVerifyScreen(
     val resendTimer  by viewModel.resendTimer.collectAsState()
     val attemptsLeft by viewModel.attemptsLeft.collectAsState()
     val maskedPhone  by viewModel.maskedPhone.collectAsState()
+    val context      = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        if (viewModel.phoneNumber.value.isEmpty()) {
+            viewModel.onPhoneChanged(phone)
+        }
+        viewModel.setVerificationId(verificationId)
+    }
 
     LaunchedEffect(uiState) {
         if (uiState is AuthUiState.Verified) onVerified()
@@ -53,8 +63,13 @@ fun OtpVerifyScreen(
         errorMessage  = (uiState as? AuthUiState.Error)?.message.orEmpty(),
         resendSeconds = resendTimer,
         attemptsLeft  = attemptsLeft,
-        onVerify      = { viewModel.verifyOtp(verificationId) },
-        onResend      = { viewModel.resendOtp(verificationId) }
+        onVerify      = { viewModel.verifyOtp() },
+        onResend      = {
+            val activity = context as? Activity
+            if (activity != null) {
+                viewModel.resendOtp(activity)
+            }
+        }
     )
 }
 

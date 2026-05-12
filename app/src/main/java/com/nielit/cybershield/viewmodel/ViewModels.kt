@@ -2,6 +2,7 @@ package com.nielit.cybershield.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.SavedStateHandle
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -16,7 +17,13 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.compose.material3.DrawerState
+import android.app.Activity
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
+import java.util.concurrent.TimeUnit
 
 // =============================================================================
 // SplashViewModel  +  SplashUiState
@@ -62,15 +69,24 @@ sealed interface AuthUiState {
     data class Error(val message: String) : AuthUiState
 }
 
+fun String.maskPhone(): String {
+    if (this.length < 4) return this
+    return "****" + this.takeLast(4)
+}
+
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    // inject: AuthRepository
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var storedVerificationId: String? = savedStateHandle.get<String>("verificationId")
+    private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
 
     private val _uiState    = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
-    private val _phone       = MutableStateFlow("")
+    private val _phone       = MutableStateFlow(savedStateHandle.get<String>("phone") ?: "")
     val phoneNumber: StateFlow<String> = _phone.asStateFlow()
 
     private val _otp         = MutableStateFlow("")
@@ -82,41 +98,142 @@ class AuthViewModel @Inject constructor(
     private val _attempts    = MutableStateFlow(3)
     val attemptsLeft: StateFlow<Int> = _attempts.asStateFlow()
 
-    private val _masked      = MutableStateFlow("")
+    private val _masked      = MutableStateFlow(savedStateHandle.get<String>("masked") ?: "")
     val maskedPhone: StateFlow<String> = _masked.asStateFlow()
 
-    fun onPhoneChanged(value: String) { _phone.value = value }
+    fun onPhoneChanged(value: String) {
+        _phone.value = value
+        savedStateHandle["phone"] = value
+        _masked.value = value.maskPhone()
+        savedStateHandle["masked"] = value.maskPhone()
+    }
     fun onOtpChanged(value: String)   { _otp.value = value }
 
-    fun requestOtp(/* verificationCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks */) {
-        viewModelScope.launch {
-            _uiState.value = AuthUiState.Loading
-            // TODO: FirebaseAuth.getInstance().verifyPhoneNumber(...)
-            delay(1_000L)
-            _masked.value = _phone.value.maskPhone()
-            _uiState.value = AuthUiState.OtpSent(verificationId = "mock_verification_id")
-            startResendTimer()
-        }
+    fun setVerificationId(id: String) {
+        storedVerificationId = id
+        savedStateHandle["verificationId"] = id
     }
 
-    fun verifyOtp(verificationId: String) {
-        viewModelScope.launch {
-            _uiState.value = AuthUiState.Loading
-            delay(1_000L)
-            // TODO: PhoneAuthProvider.getCredential(verificationId, otp) -> signInWithCredential
-            if (_otp.value == "123456") {   // replace with real check
-                _uiState.value = AuthUiState.Verified
-            } else {
-                _attempts.value -= 1
-                _uiState.value = AuthUiState.Error("Wrong OTP. Try again.")
+    fun requestOtp(activity: Activity) {
+        if (_phone.value.length != 10) {
+            _uiState.value = AuthUiState.Error("Invalid phone number")
+            return
+        }
+
+        // --- Mock Bypass for Development ---
+        if (_phone.value == "1234567890") {
+            val masked = _phone.value.maskPhone()
+            _masked.value = masked
+            savedStateHandle["masked"] = masked
+            savedStateHandle["verificationId"] = "test_verification_id"
+            storedVerificationId = "test_verification_id"
+            _uiState.value = AuthUiState.OtpSent("test_verification_id")
+            startResendTimer()
+            return
+        }
+
+        _uiState.value = AuthUiState.Loading
+        val fullPhone = "+91${_phone.value}"
+
+        val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                signInWithPhoneAuthCredential(credential)
+            }
+
+            override fun onVerificationFailed(e: FirebaseException) {
+                _uiState.value = AuthUiState.Error(e.localizedMessage ?: "Verification failed")
+            }
+
+            override fun onCodeSent(
+                verificationId: String,
+                token: PhoneAuthProvider.ForceResendingToken
+            ) {
+                storedVerificationId = verificationId
+                resendToken = token
+                val masked = _phone.value.maskPhone()
+                _masked.value = masked
+                savedStateHandle["masked"] = masked
+                savedStateHandle["verificationId"] = verificationId
+                _uiState.value = AuthUiState.OtpSent(verificationId)
+                startResendTimer()
             }
         }
+
+        val options = PhoneAuthOptions.newBuilder(auth)
+            .setPhoneNumber(fullPhone)
+            .setTimeout(60L, TimeUnit.SECONDS)
+            .setActivity(activity)
+            .setCallbacks(callbacks)
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-    fun resendOtp(verificationId: String) {
-        _resendTimer.value = 30
-        startResendTimer()
-        // TODO: call FirebaseAuth resend
+    fun verifyOtp() {
+        val code = _otp.value
+
+        // --- Mock Bypass for Development ---
+        if (_phone.value == "1234567890" && code == "123456") {
+            _uiState.value = AuthUiState.Verified
+            return
+        }
+
+        if (code.length != 6 || storedVerificationId == null) {
+            _uiState.value = AuthUiState.Error("Invalid OTP")
+            return
+        }
+
+        _uiState.value = AuthUiState.Loading
+        val credential = PhoneAuthProvider.getCredential(storedVerificationId!!, code)
+        signInWithPhoneAuthCredential(credential)
+    }
+
+    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _uiState.value = AuthUiState.Verified
+                } else {
+                    _attempts.value -= 1
+                    _uiState.value = AuthUiState.Error(task.exception?.localizedMessage ?: "Sign in failed")
+                }
+            }
+    }
+
+    fun resendOtp(activity: Activity) {
+        if (resendToken == null) return
+        
+        _uiState.value = AuthUiState.Loading
+        val fullPhone = "+91${_phone.value}"
+        
+        val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                signInWithPhoneAuthCredential(credential)
+            }
+
+            override fun onVerificationFailed(e: FirebaseException) {
+                _uiState.value = AuthUiState.Error(e.localizedMessage ?: "Resend failed")
+            }
+
+            override fun onCodeSent(
+                verificationId: String,
+                token: PhoneAuthProvider.ForceResendingToken
+            ) {
+                storedVerificationId = verificationId
+                resendToken = token
+                _resendTimer.value = 30
+                _uiState.value = AuthUiState.OtpSent(verificationId)
+                startResendTimer()
+            }
+        }
+
+        val options = PhoneAuthOptions.newBuilder(auth)
+            .setPhoneNumber(fullPhone)
+            .setTimeout(60L, TimeUnit.SECONDS)
+            .setActivity(activity)
+            .setCallbacks(callbacks)
+            .setForceResendingToken(resendToken!!)
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
     private fun startResendTimer() {

@@ -12,7 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import android.app.Activity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -36,6 +38,7 @@ fun LoginScreen(
 ) {
     val uiState    by viewModel.uiState.collectAsState()
     val phoneState by viewModel.phoneNumber.collectAsState()
+    val context    = LocalContext.current
 
     LaunchedEffect(uiState) {
         if (uiState is AuthUiState.OtpSent) {
@@ -48,7 +51,12 @@ fun LoginScreen(
         onPhoneChange = viewModel::onPhoneChanged,
         isLoading   = uiState is AuthUiState.Loading,
         errorMessage= (uiState as? AuthUiState.Error)?.message.orEmpty(),
-        onGetOtp    = viewModel::requestOtp
+        onGetOtp    = {
+            val activity = context as? Activity
+            if (activity != null) {
+                viewModel.requestOtp(activity)
+            }
+        }
     )
 }
 
