@@ -62,6 +62,11 @@ fun CyberShieldNavHost(
                 onOtpSent = { verificationId ->
                     navController.navigate(Routes.otp(verificationId, viewModel.phoneNumber.value))
                 },
+                onLoginSuccess = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.LOGIN) { inclusive = true }
+                    }
+                },
                 viewModel = viewModel
             )
         }

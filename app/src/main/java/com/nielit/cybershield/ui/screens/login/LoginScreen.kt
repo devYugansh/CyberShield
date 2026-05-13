@@ -33,16 +33,19 @@ import com.nielit.cybershield.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
-    onOtpSent : (String) -> Unit,
-    viewModel : AuthViewModel = hiltViewModel()
+    onOtpSent: (String) -> Unit,
+    onLoginSuccess: () -> Unit,
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     val uiState    by viewModel.uiState.collectAsState()
     val phoneState by viewModel.phoneNumber.collectAsState()
     val context    = LocalContext.current
 
     LaunchedEffect(uiState) {
-        if (uiState is AuthUiState.OtpSent) {
-            onOtpSent((uiState as AuthUiState.OtpSent).verificationId)
+        when (uiState) {
+            is AuthUiState.OtpSent -> onOtpSent((uiState as AuthUiState.OtpSent).verificationId)
+            is AuthUiState.Verified -> onLoginSuccess()
+            else -> Unit
         }
     }
 
@@ -56,7 +59,8 @@ fun LoginScreen(
             if (activity != null) {
                 viewModel.requestOtp(activity)
             }
-        }
+        },
+        onGuestLogin = { viewModel.loginAsGuest() }
     )
 }
 
@@ -71,6 +75,7 @@ fun LoginContent(
     isLoading    : Boolean,
     errorMessage : String,
     onGetOtp     : () -> Unit,
+    onGuestLogin : () -> Unit,
     modifier     : Modifier = Modifier
 ) {
     val focusManager   = LocalFocusManager.current
@@ -136,6 +141,18 @@ fun LoginContent(
             enabled   = phone.length == 10,
             isLoading = isLoading
         )
+
+        Spacer(Modifier.height(16.dp))
+
+        OutlinedButton(
+            onClick = onGuestLogin,
+            modifier = Modifier.fillMaxWidth().height(50.dp),
+            shape = RoundedCornerShape(12.dp),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Blue),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = Blue)
+        ) {
+            Text("Continue as Guest", style = MaterialTheme.typography.titleMedium)
+        }
 
         Spacer(Modifier.height(16.dp))
 

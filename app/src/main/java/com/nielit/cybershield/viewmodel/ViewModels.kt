@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.edit
 import com.nielit.cybershield.domain.model.Lesson
 import com.nielit.cybershield.domain.model.Module
 import com.nielit.cybershield.domain.model.User
+import com.nielit.cybershield.data.repository.AuthRepository
 import com.nielit.cybershield.data.repository.ThemeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -37,7 +38,7 @@ sealed interface SplashUiState {
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    // inject: FirebaseAuth, or an AuthRepository abstraction
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<SplashUiState>(SplashUiState.Loading)
@@ -50,9 +51,11 @@ class SplashViewModel @Inject constructor(
     private fun checkSession() {
         viewModelScope.launch {
             delay(1_500L)
-            val hasSession = FirebaseAuth.getInstance().currentUser != null
-            _uiState.value = if (hasSession) SplashUiState.NavigateToHome
-            else            SplashUiState.NavigateToLogin
+            val isGuest = authRepository.isGuestMode.first()
+            val hasSession = authRepository.isLoggedIn()
+            
+            _uiState.value = if (hasSession || isGuest) SplashUiState.NavigateToHome
+            else SplashUiState.NavigateToLogin
         }
     }
 }
@@ -76,7 +79,8 @@ fun String.maskPhone(): String {
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -112,6 +116,13 @@ class AuthViewModel @Inject constructor(
     fun setVerificationId(id: String) {
         storedVerificationId = id
         savedStateHandle["verificationId"] = id
+    }
+
+    fun loginAsGuest() {
+        viewModelScope.launch {
+            authRepository.setGuestMode(true)
+            _uiState.value = AuthUiState.Verified
+        }
     }
 
     fun requestOtp(activity: Activity) {
