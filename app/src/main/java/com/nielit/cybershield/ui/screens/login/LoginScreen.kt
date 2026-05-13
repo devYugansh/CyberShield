@@ -88,6 +88,7 @@ fun LoginContent(
         modifier = modifier
             .fillMaxSize()
             .background(White)
+            .statusBarsPadding()
             .padding(horizontal = 24.dp)
     ) {
         Spacer(Modifier.height(56.dp))

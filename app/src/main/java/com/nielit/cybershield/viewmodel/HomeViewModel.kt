@@ -8,6 +8,8 @@ import com.nielit.cybershield.domain.model.Lesson
 import com.nielit.cybershield.domain.model.User
 import com.nielit.cybershield.data.repository.ContentRepository
 import com.nielit.cybershield.data.repository.ThemeRepository
+import com.nielit.cybershield.data.repository.AuthRepository
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -31,6 +33,7 @@ sealed interface HomeUiState {
 class HomeViewModel @Inject constructor(
     private val contentRepository: ContentRepository,
     private val themeRepository: ThemeRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     // State for the UI
@@ -41,8 +44,17 @@ class HomeViewModel @Inject constructor(
     val isDarkMode: StateFlow<Boolean> = themeRepository.isDarkTheme
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
-    // Current user (mocked for now, integrate with Auth repository if available)
-    val currentUser: User? = User("+91 98765 43210", isGuest = false)
+    // Reactive current user
+    val currentUser: StateFlow<User?> = authRepository.isGuestMode.map { isGuest ->
+        if (isGuest) {
+            User(phone = "Guest Mode", isGuest = true)
+        } else {
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            if (firebaseUser != null) {
+                User(phone = firebaseUser.phoneNumber ?: "Unknown", isGuest = false)
+            } else null
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     init {
         loadContent()
@@ -131,7 +143,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun signOut() {
-        // Implement real sign out logic here
+        viewModelScope.launch {
+            authRepository.signOut()
+            authRepository.clearGuestMode()
+        }
     }
 
     fun rateUs() {}

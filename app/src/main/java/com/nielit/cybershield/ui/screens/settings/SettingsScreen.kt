@@ -77,7 +77,7 @@ fun SettingsContent(
                 title            = "Settings",
                 navigationIcon   = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = White)
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
             )

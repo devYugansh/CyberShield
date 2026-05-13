@@ -50,11 +50,13 @@ fun HomeScreen(
     val drawerState   = rememberDrawerState(DrawerValue.Closed)
     val scope         = rememberCoroutineScope()
 
+    val currentUser   by viewModel.currentUser.collectAsState()
+
     ModalNavigationDrawer(
         drawerState   = drawerState,
         drawerContent = {
             SideDrawer(
-                user              = viewModel.currentUser,
+                user              = currentUser,
                 isDarkMode        = isDarkMode,
                 onDarkModeToggle  = viewModel::toggleDarkMode,
                 onNavigateSettings= {
@@ -94,42 +96,14 @@ fun HomeContent(
 ) {
     Scaffold(
         topBar = {
-            // ── Enhanced TopBar with NIELIT Branding ──
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Navy)
-                    .statusBarsPadding()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                ) {
-                    IconButton(onClick = onHamburgerClick, modifier = Modifier.size(48.dp)) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu", tint = White, modifier = Modifier.size(24.dp))
-                    }
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "CyberShield",
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = White
-                            )
-                        )
-                        Text(
-                            text = "NIELIT Cybersecurity Education",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                color = White.copy(alpha = 0.85f),
-                                fontSize = MaterialTheme.typography.labelSmall.fontSize
-                            )
-                        )
+            CsTopBar(
+                title = "CyberShield",
+                navigationIcon = {
+                    IconButton(onClick = onHamburgerClick) {
+                        Icon(Icons.Default.Menu, contentDescription = "Menu")
                     }
                 }
-            }
+            )
         },
         containerColor = Surface
     ) { padding ->

@@ -6,6 +6,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nielit.cybershield.ui.components.CsErrorText
 import com.nielit.cybershield.ui.components.CsPrimaryButton
+import com.nielit.cybershield.ui.components.CsTopBar
 import com.nielit.cybershield.ui.theme.*
 import com.nielit.cybershield.viewmodel.AuthUiState
 import com.nielit.cybershield.viewmodel.AuthViewModel
@@ -35,6 +38,7 @@ fun OtpVerifyScreen(
     verificationId: String,
     phone         : String,
     onVerified    : () -> Unit,
+    onBack        : () -> Unit,
     viewModel     : AuthViewModel = hiltViewModel()
 ) {
     val uiState      by viewModel.uiState.collectAsState()
@@ -69,7 +73,8 @@ fun OtpVerifyScreen(
             if (activity != null) {
                 viewModel.resendOtp(activity)
             }
-        }
+        },
+        onBack        = onBack
     )
 }
 
@@ -88,73 +93,88 @@ fun OtpVerifyContent(
     attemptsLeft : Int,
     onVerify     : () -> Unit,
     onResend     : () -> Unit,
+    onBack       : () -> Unit,
     modifier     : Modifier = Modifier
 ) {
     val hasError   = errorMessage.isNotBlank()
     val isLocked   = attemptsLeft <= 0
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .fillMaxSize()
-            .background(White)
-            .padding(horizontal = 24.dp)
-    ) {
-        Spacer(Modifier.height(64.dp))
+    Scaffold(
+        topBar = {
+            CsTopBar(
+                title = "Verification",
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        },
+        containerColor = White
+    ) { padding ->
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(horizontal = 24.dp)
+        ) {
+            Spacer(Modifier.height(32.dp))
 
-        Text(
-            text  = "Enter OTP",
-            style = MaterialTheme.typography.headlineLarge,
-            color = Navy
-        )
-        Spacer(Modifier.height(4.dp))
-        Text(
-            text  = "Sent to +91 $maskedPhone",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MutedText
-        )
-
-        Spacer(Modifier.height(40.dp))
-
-        // 6-box OTP input
-        OtpInputRow(
-            value      = otpValue,
-            onChange   = onOtpChange,
-            hasError   = hasError,
-            isDisabled = isLocked
-        )
-
-        CsErrorText(
-            message  = errorMessage,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        // Attempts hint – shown after first failure
-        if (attemptsLeft in 1..2) {
-            Spacer(Modifier.height(8.dp))
             Text(
-                text  = "$attemptsLeft attempt${if (attemptsLeft == 1) "" else "s"} remaining",
-                style = MaterialTheme.typography.bodySmall,
-                color = ErrorRed
+                text  = "Enter OTP",
+                style = MaterialTheme.typography.headlineLarge,
+                color = Navy
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text  = "Sent to +91 $maskedPhone",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MutedText
+            )
+
+            Spacer(Modifier.height(40.dp))
+
+            // 6-box OTP input
+            OtpInputRow(
+                value      = otpValue,
+                onChange   = onOtpChange,
+                hasError   = hasError,
+                isDisabled = isLocked
+            )
+
+            CsErrorText(
+                message  = errorMessage,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            // Attempts hint – shown after first failure
+            if (attemptsLeft in 1..2) {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text  = "$attemptsLeft attempt${if (attemptsLeft == 1) "" else "s"} remaining",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = ErrorRed
+                )
+            }
+
+            Spacer(Modifier.height(28.dp))
+
+            CsPrimaryButton(
+                text      = "Verify",
+                onClick   = onVerify,
+                enabled   = otpValue.length == 6 && !isLocked,
+                isLoading = isLoading
+            )
+
+            Spacer(Modifier.height(20.dp))
+
+            // Resend row
+            ResendTimerRow(
+                seconds  = resendSeconds,
+                onResend = onResend
             )
         }
-
-        Spacer(Modifier.height(28.dp))
-
-        CsPrimaryButton(
-            text      = "Verify",
-            onClick   = onVerify,
-            enabled   = otpValue.length == 6 && !isLocked,
-            isLoading = isLoading
-        )
-
-        Spacer(Modifier.height(20.dp))
-
-        // Resend row
-        ResendTimerRow(
-            seconds  = resendSeconds,
-            onResend = onResend
-        )
     }
 }
 

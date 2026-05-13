@@ -33,6 +33,7 @@ import androidx.compose.ui.geometry.Size
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CsTopBar(
+    modifier       : Modifier = Modifier,
     title          : String,
     navigationIcon : @Composable () -> Unit = {},
     actions        : @Composable RowScope.() -> Unit = {}
@@ -42,7 +43,7 @@ fun CsTopBar(
             Text(
                 text  = title,
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = White
             )
         },
         navigationIcon = navigationIcon,
@@ -53,7 +54,8 @@ fun CsTopBar(
             navigationIconContentColor = White,
             actionIconContentColor     = White
         ),
-        modifier = Modifier.height(56.dp) // under 44dp content, 56dp bar
+        windowInsets = TopAppBarDefaults.windowInsets,
+        modifier = modifier
     )
 }
 

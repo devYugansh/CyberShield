@@ -150,7 +150,7 @@ private fun DrawerHeader(user: User?, modifier: Modifier = Modifier) {
         Spacer(Modifier.height(12.dp))
         Text(
             text  = if (user == null || user.isGuest) "Hello, Guest"
-                    else "Hello, +91 ${user.maskedPhone}",
+                    else "Hello, User",
             style = MaterialTheme.typography.titleLarge,
             color = Navy
         )

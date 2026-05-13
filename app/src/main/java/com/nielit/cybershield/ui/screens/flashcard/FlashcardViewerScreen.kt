@@ -137,14 +137,17 @@ fun FlashcardViewerContent(
             CsTopBar(
                 title = lesson.title,
                 navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                    }
+                },
+                actions = {
                     IconButton(onClick = {
                         if (pagerState.currentPage > 0) showLeaveDialog = true
                         else onBack()
                     }) {
-                        Icon(Icons.Default.Close, "Exit", tint = White)
+                        Icon(Icons.Default.Close, "Exit")
                     }
-                },
-                actions = {
                     IconButton(onClick = {
                         val currentCard = if (!isOnQuizCard) flashcards[pagerState.currentPage] else null
                         val shareText = if (currentCard != null) {
