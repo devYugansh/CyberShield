@@ -130,7 +130,7 @@ fun OtpVerifyContent(
             Text(
                 text  = "Sent to +91 $maskedPhone",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
             )
 
             Spacer(Modifier.height(40.dp))
@@ -270,13 +270,13 @@ fun ResendTimerRow(
         Text(
             text  = "Didn't receive it? ",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
         )
         if (seconds > 0) {
             Text(
                 text  = "Resend in ${seconds}s",
                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                color = MaterialTheme.colorScheme.onBackground
             )
         } else {
             TextButton(

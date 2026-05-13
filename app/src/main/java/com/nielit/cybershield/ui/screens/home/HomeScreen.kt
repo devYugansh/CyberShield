@@ -111,7 +111,7 @@ fun HomeContent(
         when (uiState) {
             is HomeUiState.Loading -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = Blue)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
 
@@ -203,14 +203,14 @@ private fun UnitHeader(unit: CourseUnit) {
             style = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground,
-                letterSpacing = 1.sp
+                letterSpacing = 1.2.sp
             )
         )
         if (unit.description.isNotEmpty()) {
             Text(
                 text = unit.description,
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color = MutedText
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )
         }
@@ -331,7 +331,7 @@ private fun StatItem(
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall.copy(
-                color = MutedText,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 0.5.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -435,7 +435,7 @@ fun ModuleCard(
                         Text(
                             text  = "$completedCount/${module.lessons.size} lessons completed",
                             style = MaterialTheme.typography.labelSmall.copy(
-                                color = MutedText,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 11.sp
                             )
                         )
@@ -509,7 +509,7 @@ fun LessonRow(
         Text(
             text  = lesson.title,
             style = MaterialTheme.typography.titleMedium.copy(
-                color = if (isCompleted) MutedText else MaterialTheme.colorScheme.onSurface,
+                color = if (isCompleted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
                 fontWeight = if (isCompleted) FontWeight.Normal else FontWeight.SemiBold
             ),
             modifier = Modifier.weight(1f)
@@ -533,14 +533,14 @@ fun ProBadge(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
-            .background(color = Navy.copy(alpha = 0.1f))
-            .border(1.dp, Navy.copy(alpha = 0.3f), RoundedCornerShape(20.dp))
+            .background(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
+            .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), RoundedCornerShape(20.dp))
             .padding(horizontal = 10.dp, vertical = 3.dp)
     ) {
         Text(
             text  = "🔐 ADVANCED",
             style = MaterialTheme.typography.labelSmall.copy(
-                color      = Navy,
+                color      = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 9.sp
             )

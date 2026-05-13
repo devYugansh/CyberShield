@@ -22,18 +22,21 @@ val CyberShieldShapes = Shapes(
 
 // ── Light colour scheme ────────────────────────────────────────────────────────
 private val LightColorScheme = lightColorScheme(
-    primary          = Blue,
-    onPrimary        = White,
-    primaryContainer = Surface,
-    secondary        = Navy,
-    onSecondary      = White,
-    background       = Surface,
-    onBackground     = Navy,
-    surface          = White,
-    onSurface        = Navy,
-    error            = ErrorRed,
-    onError          = White,
-    outline          = Border
+    primary            = Blue,
+    onPrimary          = White,
+    primaryContainer   = Navy,
+    onPrimaryContainer = White,
+    secondary          = Navy,
+    onSecondary        = White,
+    background         = Surface,
+    onBackground       = Navy,
+    surface            = White,
+    onSurface          = Navy,
+    surfaceVariant     = Color(0xFFE2E8F0),
+    onSurfaceVariant   = MutedText,
+    error              = ErrorRed,
+    onError            = White,
+    outline            = Border
 )
 
 // ── Dark colour scheme ─────────────────────────────────────────────────────────
@@ -41,12 +44,15 @@ private val DarkColorScheme = darkColorScheme(
     primary          = Blue,
     onPrimary        = White,
     primaryContainer = ComposeColor(0xFF1E293B),
+    onPrimaryContainer = White,
     secondary        = ComposeColor(0xFF93C5FD),
     onSecondary      = ComposeColor(0xFF1E293B),
     background       = ComposeColor(0xFF0F172A),
     onBackground     = White,
     surface          = ComposeColor(0xFF1E293B),
     onSurface        = White,
+    surfaceVariant   = ComposeColor(0xFF334155),
+    onSurfaceVariant = ComposeColor(0xFF94A3B8),
     error            = ComposeColor(0xFFFCA5A5),
     onError          = ComposeColor(0xFF7F1D1D),
     outline          = ComposeColor(0xFF334155)

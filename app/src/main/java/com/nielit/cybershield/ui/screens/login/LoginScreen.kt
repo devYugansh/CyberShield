@@ -108,7 +108,7 @@ fun LoginContent(
         Text(
             text  = "Enter your mobile number",
             style = MaterialTheme.typography.bodyMedium,
-            color = MutedText
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(Modifier.height(32.dp))
@@ -161,7 +161,7 @@ fun LoginContent(
         Text(
             text      = "We will send a 6-digit code via SMS",
             style     = MaterialTheme.typography.bodySmall,
-            color     = MutedText,
+            color     = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
     }
@@ -179,7 +179,9 @@ fun PhoneInputRow(
     focusRequester: FocusRequester = remember { FocusRequester() },
     onDone        : () -> Unit     = {}
 ) {
-    val borderColor = if (hasError) ErrorRed else if (phone.length == 10) Blue else Border
+    val borderColor = if (hasError) MaterialTheme.colorScheme.error 
+                     else if (phone.length == 10) MaterialTheme.colorScheme.primary 
+                     else MaterialTheme.colorScheme.outline
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -199,7 +201,7 @@ fun PhoneInputRow(
                 .wrapContentWidth()
                 .fillMaxHeight()
                 .background(
-                    color = MaterialTheme.colorScheme.surface,
+                    color = MaterialTheme.colorScheme.surfaceVariant,
                     shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
                 )
                 .padding(horizontal = 12.dp)
@@ -214,7 +216,7 @@ fun PhoneInputRow(
         VerticalDivider(
             modifier  = Modifier.fillMaxHeight(),
             thickness = 1.dp,
-            color     = Border
+            color     = MaterialTheme.colorScheme.outline
         )
 
 
@@ -237,7 +239,7 @@ fun PhoneInputRow(
                         .padding(horizontal = 12.dp)
                 ) {
                     if (phone.isEmpty()) {
-                        Text("98765 XXXXX", color = MutedText,
+                        Text("98765 XXXXX", color = MaterialTheme.colorScheme.onSurfaceVariant,
                             style = MaterialTheme.typography.titleMedium)
                     }
                     inner()

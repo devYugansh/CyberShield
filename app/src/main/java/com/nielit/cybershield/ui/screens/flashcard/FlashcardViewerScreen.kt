@@ -63,7 +63,7 @@ fun FlashcardViewerScreen(
     when (val state = uiState) {
         is FlashcardUiState.Loading -> {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = Blue)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         }
         is FlashcardUiState.Error -> {
@@ -163,7 +163,11 @@ fun FlashcardViewerContent(
                         val shareIntent = Intent.createChooser(sendIntent, null)
                         context.startActivity(shareIntent)
                     }) {
-                        Icon(Icons.Default.Share, "Share", tint = White)
+                        Icon(
+                            Icons.Default.Share,
+                            contentDescription = "Share",
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     }
                 }
             )
@@ -193,7 +197,7 @@ fun FlashcardViewerContent(
                     Text(
                         text = "Progress",
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold
                     )
                     Surface(
@@ -439,10 +443,7 @@ fun QuizCard(
                 Text(
                     text = "KNOWLEDGE CHECK",
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.2.sp
-                    ),
+                    style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
             }

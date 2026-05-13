@@ -42,8 +42,7 @@ fun CsTopBar(
         title = {
             Text(
                 text  = title,
-                style = MaterialTheme.typography.titleLarge,
-                color = White
+                style = MaterialTheme.typography.titleLarge
             )
         },
         navigationIcon = navigationIcon,
@@ -174,7 +173,7 @@ fun ProgressRing(
             Text(
                 text  = "Complete",
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -258,7 +257,7 @@ fun SectionHeader(
     Text(
         text  = text.uppercase(),
         style = MaterialTheme.typography.labelMedium.copy(
-            color  = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            color  = MaterialTheme.colorScheme.onSurfaceVariant,
             letterSpacing = 1.sp
         ),
         modifier = modifier
@@ -315,7 +314,7 @@ fun ToggleRow(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(text = label,    style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
-            Text(text = sublabel, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+            Text(text = sublabel, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Switch(
             checked         = checked,
@@ -357,7 +356,7 @@ fun LoadingDots(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .size(8.dp)
                     .clip(CircleShape)
-                    .background(Blue.copy(alpha = alpha))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = alpha))
             )
         }
     }
@@ -388,7 +387,7 @@ fun InfoRow(
         Text(
             text  = value,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

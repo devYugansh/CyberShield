@@ -14,6 +14,8 @@ val PoppinsFontFamily = FontFamily.Default   // replace: FontFamily(Font(R.font.
 val NunitoFontFamily  = FontFamily.Default   // replace: FontFamily(Font(R.font.nunito_regular), ...)
 
 // ── CyberShield Typography ────────────────────────────────────────────────────
+// Removing hardcoded colors (Navy/MutedText) to allow theme-aware reactivity 
+// and visibility on contrasting backgrounds (e.g. Navy TopBars).
 val CyberShieldTypography = Typography(
 
     // Screen headings  e.g. "Welcome", "Enter OTP"
@@ -21,8 +23,7 @@ val CyberShieldTypography = Typography(
         fontFamily = PoppinsFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize   = 24.sp,
-        lineHeight = 32.sp,
-        color      = Navy
+        lineHeight = 32.sp
     ),
 
     // Module card titles, section headers
@@ -30,28 +31,26 @@ val CyberShieldTypography = Typography(
         fontFamily = PoppinsFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize   = 20.sp,
-        lineHeight = 28.sp,
-        color      = Navy
+        lineHeight = 28.sp
     ),
 
-    // App title in TopBar, card body titles (14sp bold)
+    // App title in TopBar, card body titles
     titleLarge = TextStyle(
         fontFamily = PoppinsFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize   = 16.sp,
-        lineHeight = 24.sp,
-        color      = Navy
+        fontSize   = 18.sp,
+        lineHeight = 26.sp
     ),
 
     // Lesson row titles, drawer items
     titleMedium = TextStyle(
         fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize   = 14.sp,
-        lineHeight = 20.sp
+        fontWeight = FontWeight.SemiBold,
+        fontSize   = 16.sp,
+        lineHeight = 24.sp
     ),
 
-    // Body text – flashcard body (12sp, line-height 1.5)
+    // Body text – general content
     bodyLarge = TextStyle(
         fontFamily = NunitoFontFamily,
         fontWeight = FontWeight.Normal,
@@ -73,21 +72,28 @@ val CyberShieldTypography = Typography(
         lineHeight = 18.sp
     ),
 
-    // Helper text, hints, watermarks (10sp)
+    // Used for "Progress" and "01 / 03" labels
+    labelLarge = TextStyle(
+        fontFamily = PoppinsFontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize   = 14.sp,
+        lineHeight = 20.sp
+    ),
+
+    // Helper text, hints, watermarks
     labelSmall = TextStyle(
         fontFamily = NunitoFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize   = 10.sp,
-        lineHeight = 14.sp,
-        color      = MutedText
+        fontSize   = 11.sp,
+        lineHeight = 16.sp
     ),
 
-    // Quiz "QUESTION" muted caps label (10sp)
+    // Quiz "QUESTION" muted caps label
     labelMedium = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.Medium,
+        fontFamily = PoppinsFontFamily,
+        fontWeight = FontWeight.Bold,
         fontSize   = 10.sp,
         lineHeight = 14.sp,
-        letterSpacing = 1.sp
+        letterSpacing = 1.1.sp
     )
 )

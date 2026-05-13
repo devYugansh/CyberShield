@@ -111,7 +111,7 @@ fun SideDrawer(
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.SemiBold
                     ),
-                    color = ErrorRed
+                    color = MaterialTheme.colorScheme.error
                 )
             }
             Spacer(Modifier.height(16.dp))
@@ -158,7 +158,7 @@ private fun DrawerHeader(user: User?, modifier: Modifier = Modifier) {
             Text(
                 text  = user.maskedPhone,
                 style = MaterialTheme.typography.bodySmall,
-                color = MutedText
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
