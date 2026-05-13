@@ -83,7 +83,7 @@ fun SettingsContent(
             )
         },
         snackbarHost = { SnackbarHost(snackbarState) },
-        containerColor = Surface
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
 
         Column(
@@ -98,7 +98,7 @@ fun SettingsContent(
             // ── Preferences section ───────────────────────────────────────
             Card(
                 shape    = MaterialTheme.shapes.medium,
-                colors   = CardDefaults.cardColors(containerColor = White),
+                colors   = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation= CardDefaults.cardElevation(2.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -114,7 +114,7 @@ fun SettingsContent(
                         onChecked= onNotifToggle
                     )
 
-                    Divider(color = Border, thickness = 1.dp,
+                    HorizontalDivider(color = Border, thickness = 1.dp,
                         modifier = Modifier.padding(horizontal = 16.dp))
 
                     ToggleRow(
@@ -131,7 +131,7 @@ fun SettingsContent(
             // ── Account section ───────────────────────────────────────────
             Card(
                 shape    = MaterialTheme.shapes.medium,
-                colors   = CardDefaults.cardColors(containerColor = White),
+                colors   = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation= CardDefaults.cardElevation(2.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -143,7 +143,7 @@ fun SettingsContent(
                     // Phone number – read only
                     InfoRow(label = "Phone Number", value = "+91 $maskedPhone")
 
-                    Divider(color = Border, thickness = 1.dp,
+                    HorizontalDivider(color = Border, thickness = 1.dp,
                         modifier = Modifier.padding(horizontal = 16.dp))
 
                     // Sign out
@@ -188,36 +188,6 @@ fun SettingsContent(
             dismissText = "Cancel",
             onConfirm   = { showSignOutDialog = false; onSignOut() },
             onDismiss   = { showSignOutDialog = false }
-        )
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// InfoRow  –  read-only label / value pair
-// ─────────────────────────────────────────────────────────────────────────────
-
-@Composable
-fun InfoRow(
-    label   : String,
-    value   : String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 14.dp)
-    ) {
-        Text(
-            text     = label,
-            style    = MaterialTheme.typography.titleMedium,
-            color    = Navy,
-            modifier = Modifier.weight(1f)
-        )
-        Text(
-            text  = value,
-            style = MaterialTheme.typography.bodySmall,
-            color = MutedText
         )
     }
 }

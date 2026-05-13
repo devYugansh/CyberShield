@@ -87,7 +87,7 @@ fun LoginContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
-            .background(White)
+            .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
             .padding(horizontal = 24.dp)
     ) {
@@ -102,7 +102,7 @@ fun LoginContent(
         Text(
             text  = "Welcome",
             style = MaterialTheme.typography.headlineLarge,
-            color = Navy
+            color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(4.dp))
         Text(
@@ -149,8 +149,8 @@ fun LoginContent(
             onClick = onGuestLogin,
             modifier = Modifier.fillMaxWidth().height(50.dp),
             shape = RoundedCornerShape(12.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Blue),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = Blue)
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary)
         ) {
             Text("Continue as Guest", style = MaterialTheme.typography.titleMedium)
         }
@@ -199,7 +199,7 @@ fun PhoneInputRow(
                 .wrapContentWidth()
                 .fillMaxHeight()
                 .background(
-                    color = Surface,
+                    color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
                 )
                 .padding(horizontal = 12.dp)
@@ -207,7 +207,7 @@ fun PhoneInputRow(
             Text(
                 text  = "+91",
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                color = Navy
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
 
@@ -222,7 +222,7 @@ fun PhoneInputRow(
         BasicTextField(
             value       = phone,
             onValueChange = onPhoneChange,
-            textStyle   = MaterialTheme.typography.titleMedium.copy(color = Navy),
+            textStyle   = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurface),
             singleLine  = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,

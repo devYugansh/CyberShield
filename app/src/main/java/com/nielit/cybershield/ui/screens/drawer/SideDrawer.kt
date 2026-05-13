@@ -35,16 +35,15 @@ fun SideDrawer(
 ) {
     var showSignOutDialog by remember { mutableStateOf(false) }
 
-    // Drawer occupies ~70% screen width
     ModalDrawerSheet(
         modifier      = modifier.fillMaxHeight(),
-        drawerContainerColor = White,
+        drawerContainerColor = MaterialTheme.colorScheme.surface,
         drawerShape   = MaterialTheme.shapes.large
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(White)
+                .background(MaterialTheme.colorScheme.surface)
                 .statusBarsPadding()
         ) {
 
@@ -90,8 +89,8 @@ fun SideDrawer(
                         onCheckedChange = onDarkModeToggle,
                         colors          = SwitchDefaults.colors(
                             checkedThumbColor   = White,
-                            checkedTrackColor   = Blue,
-                            uncheckedTrackColor = Border
+                            checkedTrackColor   = MaterialTheme.colorScheme.primary,
+                            uncheckedTrackColor = MaterialTheme.colorScheme.outline
                         )
                     )
                 }
@@ -152,7 +151,7 @@ private fun DrawerHeader(user: User?, modifier: Modifier = Modifier) {
             text  = if (user == null || user.isGuest) "Hello, Guest"
                     else "Hello, User",
             style = MaterialTheme.typography.titleLarge,
-            color = Navy
+            color = MaterialTheme.colorScheme.onSurface
         )
         if (user != null && !user.isGuest) {
             Spacer(Modifier.height(2.dp))

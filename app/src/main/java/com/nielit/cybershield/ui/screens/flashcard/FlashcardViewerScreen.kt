@@ -168,14 +168,14 @@ fun FlashcardViewerContent(
                 }
             )
         },
-        containerColor = Surface
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
 
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(padding)
-                .background(Surface)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             // Enhanced Progress Indicator
             Column(
@@ -193,18 +193,18 @@ fun FlashcardViewerContent(
                     Text(
                         text = "Progress",
                         style = MaterialTheme.typography.labelLarge,
-                        color = Navy.copy(alpha = 0.6f),
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                         fontWeight = FontWeight.Bold
                     )
                     Surface(
-                        color = Blue.copy(alpha = 0.1f),
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
                             text = "${pagerState.currentPage + 1} / $totalPages",
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                             style = MaterialTheme.typography.labelLarge,
-                            color = Blue,
+                            color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.ExtraBold
                         )
                     }
@@ -311,7 +311,10 @@ fun FlashCard(
 ) {
     Card(
         shape    = RoundedCornerShape(24.dp),
-        colors   = CardDefaults.cardColors(containerColor = White),
+        colors   = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
         modifier = modifier
     ) {
         Column(
@@ -356,7 +359,7 @@ fun FlashCard(
             ) {
                 // Category Tag
                 Surface(
-                    color = Blue.copy(alpha = 0.1f),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
@@ -366,7 +369,7 @@ fun FlashCard(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.2.sp
                         ),
-                        color = Blue
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
 
@@ -376,13 +379,13 @@ fun FlashCard(
                         fontWeight = FontWeight.ExtraBold,
                         lineHeight = 28.sp
                     ),
-                    color = Navy
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 // Divider
                 HorizontalDivider(
                     thickness = 1.dp,
-                    color = Border.copy(alpha = 0.5f)
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
                 )
 
                 Text(
@@ -391,7 +394,7 @@ fun FlashCard(
                         lineHeight = 26.sp,
                         fontWeight = FontWeight.Normal
                     ),
-                    color = Navy.copy(alpha = 0.8f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -415,7 +418,10 @@ fun QuizCard(
 ) {
     Card(
         shape    = RoundedCornerShape(24.dp),
-        colors   = CardDefaults.cardColors(containerColor = White),
+        colors   = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
         modifier = modifier
     ) {
         Column(
@@ -427,7 +433,7 @@ fun QuizCard(
         ) {
             // QUESTION label
             Surface(
-                color = Blue.copy(alpha = 0.1f),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
@@ -437,7 +443,7 @@ fun QuizCard(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.2.sp
                     ),
-                    color = Blue
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -447,7 +453,7 @@ fun QuizCard(
                     fontWeight = FontWeight.Bold,
                     lineHeight = 28.sp
                 ),
-                color = Navy
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Spacer(Modifier.height(8.dp))
@@ -475,7 +481,7 @@ fun QuizCard(
                         .fillMaxWidth()
                         .padding(top = 8.dp)
                         .background(
-                            color = if (isCorrect) Color(0xFFDCFCE7) else Color(0xFFFEE2E2),
+                            color = if (isCorrect) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else MaterialTheme.colorScheme.error.copy(alpha = 0.1f),
                             shape = RoundedCornerShape(16.dp)
                         )
                         .padding(16.dp)
@@ -485,13 +491,13 @@ fun QuizCard(
                             Icon(
                                 imageVector = if (isCorrect) Icons.Default.CheckCircle else Icons.Default.Error,
                                 contentDescription = null,
-                                tint = if (isCorrect) SuccessGreen else ErrorRed,
+                                tint = if (isCorrect) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                                 modifier = Modifier.size(20.dp)
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 text  = if (isCorrect) "Excellent!" else "Not quite right",
-                                color = if (isCorrect) SuccessGreen else ErrorRed,
+                                color = if (isCorrect) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                             )
                         }
@@ -499,7 +505,7 @@ fun QuizCard(
                         Text(
                             text  = quiz.explanation,
                             style = MaterialTheme.typography.bodyMedium.copy(lineHeight = 22.sp),
-                            color = Navy
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -517,18 +523,18 @@ fun OptionRow(
 ) {
     val bgColor by animateColorAsState(
         when(state) {
-            OptionState.SELECTED -> Blue.copy(alpha = 0.08f)
-            OptionState.CORRECT  -> SuccessGreen.copy(alpha = 0.12f)
-            OptionState.WRONG    -> ErrorRed.copy(alpha = 0.12f)
-            else                 -> Surface
+            OptionState.SELECTED -> MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+            OptionState.CORRECT  -> MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+            OptionState.WRONG    -> MaterialTheme.colorScheme.error.copy(alpha = 0.12f)
+            else                 -> MaterialTheme.colorScheme.surface
         }, label = "bgColor"
     )
     val borderColor by animateColorAsState(
         when(state) {
-            OptionState.SELECTED -> Blue
-            OptionState.CORRECT  -> SuccessGreen
-            OptionState.WRONG    -> ErrorRed
-            else                 -> Border
+            OptionState.SELECTED -> MaterialTheme.colorScheme.primary
+            OptionState.CORRECT  -> MaterialTheme.colorScheme.primary
+            OptionState.WRONG    -> MaterialTheme.colorScheme.error
+            else                 -> MaterialTheme.colorScheme.outline
         }, label = "borderColor"
     )
 
@@ -564,7 +570,7 @@ fun OptionRow(
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontWeight = if (state != OptionState.DEFAULT) FontWeight.Bold else FontWeight.Medium,
             ),
-            color = if (state != OptionState.DEFAULT) borderColor else Navy
+            color = if (state != OptionState.DEFAULT) borderColor else MaterialTheme.colorScheme.onSurface
         )
     }
 }
@@ -638,7 +644,7 @@ fun FlashcardEmptyState(onBack: () -> Unit) {
     ) {
         Text("This lesson has no content yet. Check back soon.",
             style = MaterialTheme.typography.bodyMedium,
-            color = MutedText, textAlign = TextAlign.Center)
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f), textAlign = TextAlign.Center)
         Spacer(Modifier.height(16.dp))
         CsPrimaryButton("Back", onClick = onBack, modifier = Modifier.width(160.dp))
     }
@@ -652,7 +658,7 @@ fun FlashcardErrorState(message: String, onBack: () -> Unit) {
         modifier = Modifier.fillMaxSize().padding(24.dp)
     ) {
         Text(message, style = MaterialTheme.typography.bodyMedium,
-            color = MutedText, textAlign = TextAlign.Center)
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f), textAlign = TextAlign.Center)
         Spacer(Modifier.height(16.dp))
         CsPrimaryButton("Back to Module", onClick = onBack, modifier = Modifier.width(200.dp))
     }
@@ -667,7 +673,7 @@ fun QuizUnavailableCard(onMarkComplete: () -> Unit) {
     ) {
         Text("Quiz unavailable for this lesson.",
             style = MaterialTheme.typography.bodyMedium,
-            color = MutedText, textAlign = TextAlign.Center)
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f), textAlign = TextAlign.Center)
         Spacer(Modifier.height(16.dp))
         CsPrimaryButton("Mark Complete Anyway", onClick = onMarkComplete,
             modifier = Modifier.fillMaxWidth())

@@ -105,7 +105,7 @@ fun HomeContent(
                 }
             )
         },
-        containerColor = Surface
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
 
         when (uiState) {
@@ -202,7 +202,7 @@ private fun UnitHeader(unit: CourseUnit) {
             text = unit.title.uppercase(),
             style = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color = Navy,
+                color = MaterialTheme.colorScheme.onBackground,
                 letterSpacing = 1.sp
             )
         )
@@ -230,11 +230,11 @@ fun ProgressSection(
 ) {
     Card(
         shape    = RoundedCornerShape(24.dp),
-        colors   = CardDefaults.cardColors(containerColor = White),
+        colors   = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation= CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, Border.copy(alpha = 0.4f), RoundedCornerShape(24.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(24.dp))
     ) {
         Column(
             modifier = Modifier
@@ -252,7 +252,7 @@ fun ProgressSection(
                     modifier = Modifier
                         .size(10.dp)
                         .clip(CircleShape)
-                        .background(Blue)
+                        .background(MaterialTheme.colorScheme.primary)
                 )
                 Spacer(Modifier.width(12.dp))
                 Text(
@@ -260,7 +260,7 @@ fun ProgressSection(
                     style = MaterialTheme.typography.labelLarge.copy(
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = 1.2.sp,
-                        color = Navy
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 )
             }
@@ -276,8 +276,8 @@ fun ProgressSection(
                     percentage = overallProgress,
                     size = 120.dp,
                     strokeWidth = 14.dp,
-                    progressColor = Navy,
-                    trackColor = Border.copy(alpha = 0.2f)
+                    progressColor = MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
                 )
 
                 // Right: Stats
@@ -288,13 +288,13 @@ fun ProgressSection(
                     StatItem(
                         label = "Lessons Completed",
                         value = "$completedCount/$totalLessons",
-                        color = Navy
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     StatItem(
                         label = "Daily Goal",
                         value = "Achieved",
-                        color = Blue
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -303,14 +303,14 @@ fun ProgressSection(
 
             // Motivational message
             Surface(
-                color = Navy.copy(alpha = 0.05f),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = "“The only truly secure system is one that is powered off, cast in a block of concrete and sealed in a lead-lined room...”",
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = Navy,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Medium,
                         lineHeight = 18.sp
                     ),
@@ -364,18 +364,18 @@ fun ModuleCard(
 ) {
     Card(
         shape    = RoundedCornerShape(24.dp),
-        colors   = CardDefaults.cardColors(containerColor = White),
+        colors   = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation= CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, Border.copy(alpha = 0.4f), RoundedCornerShape(24.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(24.dp))
     ) {
         Column {
             // Card header (always visible) with Navy left accent
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = if (isExpanded) Navy.copy(alpha = 0.04f) else White)
+                    .background(color = if (isExpanded) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.04f) else MaterialTheme.colorScheme.surface)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -384,12 +384,12 @@ fun ModuleCard(
                         .clickable(onClick = onHeaderClick)
                         .padding(0.dp)
                 ) {
-                    // Navy left accent bar
+                    // Left accent bar
                     Box(
                         modifier = Modifier
                             .width(4.dp)
                             .height(80.dp)
-                            .background(Navy)
+                            .background(MaterialTheme.colorScheme.primary)
                     )
 
                     Column(
@@ -402,7 +402,7 @@ fun ModuleCard(
                                 text  = module.title,
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
-                                    color = Navy,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = 15.sp
                                 )
                             )
@@ -419,14 +419,14 @@ fun ModuleCard(
                                 .fillMaxWidth(0.8f)
                                 .height(6.dp)
                                 .clip(RoundedCornerShape(3.dp))
-                                .background(Border.copy(alpha = 0.3f))
+                                .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
                         ) {
                             val progress = if (module.lessons.isEmpty()) 0f else (completedCount.toFloat() / module.lessons.size)
                             Box(
                                 modifier = Modifier
                                     .fillMaxHeight()
                                     .fillMaxWidth(progress)
-                                    .background(Navy)
+                                    .background(MaterialTheme.colorScheme.primary)
                                     .clip(RoundedCornerShape(3.dp))
                             )
                         }
@@ -445,7 +445,7 @@ fun ModuleCard(
                         imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp
                                       else            Icons.Default.KeyboardArrowDown,
                         contentDescription = if (isExpanded) "Collapse" else "Expand",
-                        tint = Navy,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
                             .size(24.dp)
                             .padding(end = 12.dp)
@@ -460,7 +460,7 @@ fun ModuleCard(
                 exit          = shrinkVertically(animationSpec = tween(250))
             ) {
                 Column {
-                    HorizontalDivider(color = Border, thickness = 1.dp)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline, thickness = 1.dp)
                     module.lessons.forEach { lesson ->
                         LessonRow(
                             lesson      = lesson,
@@ -493,23 +493,23 @@ fun LessonRow(
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 12.dp)
             .background(
-                color = if (isCompleted) Surface else White,
+                color = if (isCompleted) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(6.dp)
             )
     ) {
-        // Status icon with Navy color
+        // Status icon
         Icon(
             imageVector = if (isCompleted) Icons.Default.CheckCircle
                           else             Icons.Default.RadioButtonUnchecked,
             contentDescription = if (isCompleted) "Completed" else "Not started",
-            tint   = if (isCompleted) Navy else Border,
+            tint   = if (isCompleted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
             modifier = Modifier.size(22.dp)
         )
         Spacer(Modifier.width(14.dp))
         Text(
             text  = lesson.title,
             style = MaterialTheme.typography.titleMedium.copy(
-                color = if (isCompleted) MutedText else Navy,
+                color = if (isCompleted) MutedText else MaterialTheme.colorScheme.onSurface,
                 fontWeight = if (isCompleted) FontWeight.Normal else FontWeight.SemiBold
             ),
             modifier = Modifier.weight(1f)
@@ -517,7 +517,7 @@ fun LessonRow(
         Icon(
             imageVector = Icons.Default.ChevronRight,
             contentDescription = null,
-            tint = Navy.copy(alpha = if (isCompleted) 0.4f else 0.8f),
+            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = if (isCompleted) 0.4f else 0.8f),
             modifier = Modifier.size(18.dp)
         )
     }

@@ -110,7 +110,7 @@ fun OtpVerifyContent(
                 }
             )
         },
-        containerColor = White
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -124,13 +124,13 @@ fun OtpVerifyContent(
             Text(
                 text  = "Enter OTP",
                 style = MaterialTheme.typography.headlineLarge,
-                color = Navy
+                color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(Modifier.height(4.dp))
             Text(
                 text  = "Sent to +91 $maskedPhone",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MutedText
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
             )
 
             Spacer(Modifier.height(40.dp))
@@ -154,7 +154,7 @@ fun OtpVerifyContent(
                 Text(
                     text  = "$attemptsLeft attempt${if (attemptsLeft == 1) "" else "s"} remaining",
                     style = MaterialTheme.typography.bodySmall,
-                    color = ErrorRed
+                    color = MaterialTheme.colorScheme.error
                 )
             }
 
@@ -223,10 +223,10 @@ fun OtpInputRow(
                 val digit      = value.getOrNull(i)
                 val isFocused  = value.length == i
                 val borderColor= when {
-                    hasError   -> ErrorRed
-                    isFocused  -> Blue
-                    digit != null -> Navy
-                    else       -> Border
+                    hasError   -> MaterialTheme.colorScheme.error
+                    isFocused  -> MaterialTheme.colorScheme.primary
+                    digit != null -> MaterialTheme.colorScheme.onSurface
+                    else       -> MaterialTheme.colorScheme.outline
                 }
 
                 Box(
@@ -239,7 +239,7 @@ fun OtpInputRow(
                             shape = RoundedCornerShape(8.dp)
                         )
                         .background(
-                            color = if (digit != null) Surface else White,
+                            color = if (digit != null) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
                             shape = RoundedCornerShape(8.dp)
                         )
                 ) {
@@ -247,7 +247,7 @@ fun OtpInputRow(
                         text  = digit?.toString() ?: "–",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
-                            color      = if (digit != null) Navy else MutedText.copy(alpha = 0.4f)
+                            color      = if (digit != null) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                         ),
                         textAlign = TextAlign.Center
                     )
@@ -270,13 +270,13 @@ fun ResendTimerRow(
         Text(
             text  = "Didn't receive it? ",
             style = MaterialTheme.typography.bodySmall,
-            color = MutedText
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
         )
         if (seconds > 0) {
             Text(
                 text  = "Resend in ${seconds}s",
                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
-                color = MutedText
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
             )
         } else {
             TextButton(
@@ -286,7 +286,7 @@ fun ResendTimerRow(
                 Text(
                     text  = "Resend OTP",
                     style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
-                    color = Blue
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }

@@ -49,10 +49,10 @@ fun CsTopBar(
         navigationIcon = navigationIcon,
         actions        = actions,
         colors         = TopAppBarDefaults.topAppBarColors(
-            containerColor = Navy,
-            titleContentColor   = White,
-            navigationIconContentColor = White,
-            actionIconContentColor     = White
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor   = MaterialTheme.colorScheme.onPrimaryContainer,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            actionIconContentColor     = MaterialTheme.colorScheme.onPrimaryContainer
         ),
         windowInsets = TopAppBarDefaults.windowInsets,
         modifier = modifier
@@ -76,8 +76,8 @@ fun CsPrimaryButton(
         enabled  = enabled && !isLoading,
         shape    = MaterialTheme.shapes.medium,
         colors   = ButtonDefaults.buttonColors(
-            containerColor         = Blue,
-            disabledContainerColor = Border
+            containerColor         = MaterialTheme.colorScheme.primary,
+            disabledContainerColor = MaterialTheme.colorScheme.outline
         ),
         modifier = modifier
             .fillMaxWidth()
@@ -85,7 +85,7 @@ fun CsPrimaryButton(
     ) {
         if (isLoading) {
             CircularProgressIndicator(
-                color     = White,
+                color     = MaterialTheme.colorScheme.onPrimary,
                 modifier  = Modifier.size(22.dp),
                 strokeWidth = 2.dp
             )
@@ -94,7 +94,7 @@ fun CsPrimaryButton(
                 text  = text,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.SemiBold,
-                    color      = White
+                    color      = MaterialTheme.colorScheme.onPrimary
                 )
             )
         }
@@ -113,7 +113,7 @@ fun CsErrorText(
     if (message.isNotBlank()) {
         Text(
             text     = message,
-            color    = ErrorRed,
+            color    = MaterialTheme.colorScheme.error,
             style    = MaterialTheme.typography.bodySmall,
             modifier = modifier.padding(top = 4.dp)
         )
@@ -130,9 +130,12 @@ fun ProgressRing(
     modifier     : Modifier = Modifier,
     size         : Dp       = 120.dp,
     strokeWidth  : Dp       = 12.dp,
-    trackColor   : Color    = Border,
-    progressColor: Color    = Blue
+    trackColor   : Color?   = null,
+    progressColor: Color?   = null
 ) {
+    val actualTrackColor = trackColor ?: MaterialTheme.colorScheme.outline
+    val actualProgressColor = progressColor ?: MaterialTheme.colorScheme.primary
+
     val animatedSweep by animateFloatAsState(
         targetValue   = (percentage / 100f) * 360f,
         animationSpec = tween(durationMillis = 800, easing = EaseOutCubic),
@@ -155,10 +158,10 @@ fun ProgressRing(
             val topLeft = Offset(strokeWidth.toPx() / 2f, strokeWidth.toPx() / 2f)
 
             // Track
-            drawArc(color = trackColor, startAngle = 0f, sweepAngle = 360f,
+            drawArc(color = actualTrackColor, startAngle = 0f, sweepAngle = 360f,
                 useCenter = false, topLeft = topLeft, size = arcSize, style = stroke)
             // Progress
-            drawArc(color = progressColor, startAngle = -90f, sweepAngle = animatedSweep,
+            drawArc(color = actualProgressColor, startAngle = -90f, sweepAngle = animatedSweep,
                 useCenter = false, topLeft = topLeft, size = arcSize, style = stroke)
         }
 
@@ -166,12 +169,12 @@ fun ProgressRing(
             Text(
                 text  = "${percentage.toInt()}%",
                 style = MaterialTheme.typography.titleLarge.copy(fontSize = 22.sp),
-                color = Navy
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text  = "Complete",
                 style = MaterialTheme.typography.labelSmall,
-                color = MutedText
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
         }
     }
@@ -188,6 +191,10 @@ fun ProgressDashBar(
     modifier   : Modifier = Modifier,
     segmentGap : Dp       = 4.dp
 ) {
+    val filledColor = MaterialTheme.colorScheme.primary
+    val currentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+    val pendingColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+
     Canvas(
         modifier = modifier
             .fillMaxWidth()
@@ -200,9 +207,9 @@ fun ProgressDashBar(
 
         repeat(total) { i ->
             val color = when {
-                i < current  -> DashFilled
-                i == current -> DashCurrent
-                else         -> DashPending
+                i < current  -> filledColor
+                i == current -> currentColor
+                else         -> pendingColor
             }
             drawRect(
                 color   = color,
@@ -228,11 +235,11 @@ fun AvatarCircle(
         modifier         = modifier
             .size(size)
             .clip(CircleShape)
-            .background(Teal)
+            .background(MaterialTheme.colorScheme.secondary)
     ) {
         Text(
             text  = initials.uppercase(),
-            color = White,
+            color = MaterialTheme.colorScheme.onSecondary,
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             textAlign = TextAlign.Center
         )
@@ -251,7 +258,7 @@ fun SectionHeader(
     Text(
         text  = text.uppercase(),
         style = MaterialTheme.typography.labelMedium.copy(
-            color  = MutedText,
+            color  = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
             letterSpacing = 1.sp
         ),
         modifier = modifier
@@ -281,9 +288,9 @@ fun DrawerNavItem(
             .padding(horizontal = 16.dp)
     ) {
         Icon(imageVector = icon, contentDescription = label,
-            tint = Navy, modifier = Modifier.size(20.dp))
+            tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
         Spacer(Modifier.width(12.dp))
-        Text(text = label, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+        Text(text = label, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.weight(1f))
         trailing?.invoke()
     }
 }
@@ -307,16 +314,16 @@ fun ToggleRow(
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = label,    style = MaterialTheme.typography.titleMedium)
-            Text(text = sublabel, style = MaterialTheme.typography.bodySmall, color = MutedText)
+            Text(text = label,    style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+            Text(text = sublabel, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
         }
         Switch(
             checked         = checked,
             onCheckedChange = onChecked,
             colors          = SwitchDefaults.colors(
-                checkedThumbColor   = White,
-                checkedTrackColor   = Blue,
-                uncheckedTrackColor = Border
+                checkedThumbColor   = MaterialTheme.colorScheme.onPrimary,
+                checkedTrackColor   = MaterialTheme.colorScheme.primary,
+                uncheckedTrackColor = MaterialTheme.colorScheme.outline
             )
         )
     }
@@ -357,6 +364,36 @@ fun LoadingDots(modifier: Modifier = Modifier) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// InfoRow  –  read-only label / value pair
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+fun InfoRow(
+    label   : String,
+    value   : String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 14.dp)
+    ) {
+        Text(
+            text     = label,
+            style    = MaterialTheme.typography.titleMedium,
+            color    = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text  = value,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+        )
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // ConfirmationDialog  –  Generic destructive action confirmation
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -375,12 +412,12 @@ fun ConfirmationDialog(
         text  = { Text(message, style = MaterialTheme.typography.bodyMedium) },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(confirmText, color = ErrorRed, fontWeight = FontWeight.SemiBold)
+                Text(confirmText, color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.SemiBold)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(dismissText, color = Navy)
+                Text(dismissText, color = MaterialTheme.colorScheme.primary)
             }
         },
         shape = MaterialTheme.shapes.medium

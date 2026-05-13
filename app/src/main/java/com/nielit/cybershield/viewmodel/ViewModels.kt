@@ -293,8 +293,8 @@ class SettingsViewModel @Inject constructor(
     private val _notif      = MutableStateFlow(true)
     val notifEnabled: StateFlow<Boolean> = _notif.asStateFlow()
 
-    private val _dark       = MutableStateFlow(false)
-    val isDarkMode: StateFlow<Boolean> = _dark.asStateFlow()
+    val isDarkMode: StateFlow<Boolean> = themeRepository.isDarkTheme
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     private val _masked     = MutableStateFlow("")
     val maskedPhone: StateFlow<String> = _masked.asStateFlow()
