@@ -1,5 +1,8 @@
 package com.nielit.cybershield.ui.screens.login
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -15,11 +18,15 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import android.app.Activity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
+import com.nielit.cybershield.R
 import com.nielit.cybershield.ui.components.CsErrorText
 import com.nielit.cybershield.ui.components.CsPrimaryButton
 import com.nielit.cybershield.ui.screens.splash.AnimatedShieldLogo
@@ -41,6 +48,20 @@ fun LoginScreen(
     val phoneState by viewModel.phoneNumber.collectAsState()
     val context    = LocalContext.current
 
+    val googleSignInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                account.idToken?.let { viewModel.signInWithGoogle(it) }
+            } catch (e: ApiException) {
+                // Handle error
+            }
+        }
+    }
+
     LaunchedEffect(uiState) {
         when (uiState) {
             is AuthUiState.OtpSent -> onOtpSent((uiState as AuthUiState.OtpSent).verificationId)
@@ -60,6 +81,12 @@ fun LoginScreen(
                 viewModel.requestOtp(activity)
             }
         },
+        onGoogleLogin = {
+            val activity = context as? Activity
+            if (activity != null) {
+                googleSignInLauncher.launch(viewModel.getGoogleSignInIntent(activity))
+            }
+        },
         onGuestLogin = { viewModel.loginAsGuest() }
     )
 }
@@ -75,6 +102,7 @@ fun LoginContent(
     isLoading    : Boolean,
     errorMessage : String,
     onGetOtp     : () -> Unit,
+    onGoogleLogin: () -> Unit,
     onGuestLogin : () -> Unit,
     modifier     : Modifier = Modifier
 ) {
@@ -144,6 +172,43 @@ fun LoginContent(
         )
 
         Spacer(Modifier.height(16.dp))
+
+        // Divider
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            HorizontalDivider(modifier = Modifier.weight(1f))
+            Text(
+                " OR ",
+                modifier = Modifier.padding(horizontal = 8.dp),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            HorizontalDivider(modifier = Modifier.weight(1f))
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        // Google Login Button
+        OutlinedButton(
+            onClick = onGoogleLogin,
+            modifier = Modifier.fillMaxWidth().height(50.dp),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ),
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // Assuming you have a google logo in your res/drawable
+                // If not, replace with text or a generic icon
+                // Icon(Icons.Default.Google, contentDescription = null)
+                Text("Continue with Google", style = MaterialTheme.typography.titleMedium)
+            }
+        }
+
+        Spacer(Modifier.height(12.dp))
 
         OutlinedButton(
             onClick = onGuestLogin,

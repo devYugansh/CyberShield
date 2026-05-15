@@ -19,8 +19,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.compose.material3.DrawerState
 import android.app.Activity
+import android.content.Intent
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
@@ -123,6 +127,29 @@ class AuthViewModel @Inject constructor(
             authRepository.setGuestMode(true)
             _uiState.value = AuthUiState.Verified
         }
+    }
+
+    fun signInWithGoogle(idToken: String) {
+        _uiState.value = AuthUiState.Loading
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _uiState.value = AuthUiState.Verified
+                } else {
+                    _uiState.value = AuthUiState.Error(task.exception?.localizedMessage ?: "Google sign in failed")
+                }
+            }
+    }
+
+    fun getGoogleSignInIntent(activity: Activity): Intent {
+        // You'll need to set your web_client_id from google-services.json here eventually
+        // For now, it uses the default configuration
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("992609422177-igel60bae9f2p0vgfh5shbqm1op7id30.apps.googleusercontent.com")
+            .requestEmail()
+            .build()
+        return GoogleSignIn.getClient(activity, gso).signInIntent
     }
 
     fun requestOtp(activity: Activity) {
