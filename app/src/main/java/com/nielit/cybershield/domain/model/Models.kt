@@ -29,7 +29,7 @@ data class Flashcard(
     val id          : String,
     val title       : String,
     val body        : String,
-    val imageRes    : Int? = null       // nullable – optional illustration
+    val imageName   : String? = null    // Name of the drawable resource
 )
 
 data class QuizQuestion(

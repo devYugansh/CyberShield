@@ -313,6 +313,15 @@ fun FlashCard(
     card    : Flashcard,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val imageResId = remember(card.imageName) {
+        if (card.imageName != null) {
+            context.resources.getIdentifier(card.imageName, "drawable", context.packageName).let {
+                if (it != 0) it else null
+            }
+        } else null
+    }
+
     Card(
         shape    = RoundedCornerShape(24.dp),
         colors   = CardDefaults.cardColors(
@@ -327,14 +336,14 @@ fun FlashCard(
                 .verticalScroll(rememberScrollState())
         ) {
             // Image section - dynamic height based on presence
-            card.imageRes?.let {
+            imageResId?.let { resId ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(16f / 10f)
                 ) {
                     AsyncImage(
-                        model             = it,
+                        model             = resId,
                         contentDescription= null,
                         contentScale      = ContentScale.Crop,
                         modifier          = Modifier

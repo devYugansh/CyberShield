@@ -37,7 +37,8 @@ data class Flashcard(
     val id          : String,
     val title       : String,
     val body        : String,
-    val imageRes    : Int? = null       // nullable – optional illustration
+    @SerialName("image_name")
+    val imageName   : String? = null    // Name of the drawable resource
 )
 
 @Serializable

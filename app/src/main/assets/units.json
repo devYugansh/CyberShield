@@ -1704,477 +1704,550 @@
   },
   {
     "id": "unit_04",
-    "title": "Unit 4: Ethical Hacking Phases",
-    "description": "The methodology of a professional security auditor.",
+    "title": "Unit 4: Penetration Testing & Ethical Hacking",
+    "description": "The systematic process of identifying and fixing security weaknesses.",
     "modules": [
       {
         "id": "u4_m1",
-        "title": "Reconnaissance (Footprinting)",
-        "description": "Gathering information about the target without their knowledge.",
+        "title": "Introduction to Penetration Testing & Ethical Hacking",
+        "description": "Foundational concepts, terminology, and the structured phases of ethical hacking.",
         "is_pro": false,
         "lessons": [
           {
             "id": "u4_m1_l1",
-            "title": "Active vs Passive Recon",
+            "title": "The World of Ethical Hacking",
             "cards": [
               {
                 "id": "u4_m1_l1_c1",
-                "title": "Passive Reconnaissance",
-                "body": "Gathering info without interacting with the target. Examples: Searching LinkedIn, Google, or public records. The target has NO way of knowing they are being watched."
+                "title": "What is Penetration Testing?",
+                "body": "Penetration Testing (or Ethical Hacking) is the process of legally and systematically testing a computer system, network, or application to identify security weaknesses before malicious attackers can exploit them. It's about simulating real-world attacks in a controlled environment."
               },
               {
                 "id": "u4_m1_l1_c2",
-                "title": "Active Reconnaissance",
-                "body": "Directly interacting with the target's systems. Example: Pinging their server or visiting their website. This is riskier because the target might log your IP address."
+                "title": "Ethical Hacker vs. Hacker",
+                "body": "Ethical Hackers work legally with permission to protect systems and improve security. Malicious Hackers work illegally to steal data and cause damage. An ethical hacker's goal is to find vulnerabilities responsibly and report them."
+              },
+              {
+                "id": "u4_m1_l1_c3",
+                "title": "Why It Matters",
+                "body": "Organizations store sensitive data like passwords, banking details, and company secrets. Pen testing helps identify vulnerabilities, strengthen security, protect data, and meet compliance requirements before an actual breach occurs."
               }
             ],
             "quiz": {
-              "question": "Which type of reconnaissance is invisible to the target?",
-              "options": ["Active Recon", "Passive Recon", "Direct Recon", "Scanning"],
+              "question": "What is the primary difference between a hacker and an ethical hacker?",
+              "options": ["The tools they use", "Authorization and intent", "The speed of their hacking", "The operating system they use"],
               "correct_index": 1,
-              "explanation": "Passive recon uses third-party sources (like Google) so the target's own servers never see the attacker's connection."
+              "explanation": "Ethical hackers have permission (authorization) and the intent to help the organization improve its security, while malicious hackers do not."
             }
           },
           {
             "id": "u4_m1_l2",
-            "title": "Google Dorking",
+            "title": "Vulnerability, Threat & Exploit",
             "cards": [
               {
                 "id": "u4_m1_l2_c1",
-                "title": "Advanced Search Operators",
-                "body": "Using special commands in Google to find hidden files. 'filetype:pdf' finds documents, 'site:nasa.gov' limits search to one domain, and 'intitle:index of' finds open server directories."
+                "title": "Vulnerability",
+                "body": "A vulnerability is a weakness or flaw in a system (like a broken window in a house). In tech, it could be a weak password, outdated software, or a coding mistake that an attacker can exploit."
               },
               {
                 "id": "u4_m1_l2_c2",
-                "title": "The GHDB",
-                "body": "The Google Hacking Database (GHDB) is a list of famous 'Dorks' that find sensitive info like passwords, log files, and vulnerable webcams that were accidentally indexed by Google."
+                "title": "Threat & Exploit",
+                "body": "A Threat is anything capable of exploiting a vulnerability (like a thief). An Exploit is the actual method or code used to take advantage of that vulnerability (like a tool to pick the lock)."
+              },
+              {
+                "id": "u4_m1_l2_c3",
+                "title": "The Payload",
+                "body": "The Payload is the malicious action executed after successful exploitation. It could be installing malware, stealing files, or creating a hidden admin account to maintain access."
               }
             ],
             "quiz": {
-              "question": "Which Google operator would you use to find only PDF files on a specific website?",
-              "options": ["pdf:search", "filetype:pdf", "ext:only_pdf", "find:pdf"],
-              "correct_index": 1,
-              "explanation": "The 'filetype:' operator is a powerful way to filter search results to specific document formats."
+              "question": "What do we call the method or code used to take advantage of a vulnerability?",
+              "options": ["Payload", "Threat", "Exploit", "Risk"],
+              "correct_index": 2,
+              "explanation": "An exploit is the specific technique or software used to 'break through' a vulnerability."
             }
           },
           {
             "id": "u4_m1_l3",
-            "title": "WHOIS & DNS Lookup",
+            "title": "Attack Surface & Risk",
             "cards": [
               {
                 "id": "u4_m1_l3_c1",
-                "title": "WHOIS Records",
-                "body": "A public database that stores ownership info for every domain name. It can reveal the owner's name, email, phone number, and where the website is hosted."
+                "title": "Attack Surface",
+                "body": "The attack surface is the sum of all possible entry points attackers can use. This includes open ports, login pages, APIs, Wi-Fi networks, and even email services. A larger surface means more opportunities for hackers."
               },
               {
                 "id": "u4_m1_l3_c2",
-                "title": "DNS Enumeration",
-                "body": "DNS is the 'Phonebook' of the internet. Tools like 'nslookup' or 'dig' reveal the IP addresses of a company's mail servers and internal subdomains (e.g., dev.company.com)."
+                "title": "Ports and Services",
+                "body": "Ports are like 'room numbers' for network services. Port 80 is HTTP (Web), 443 is HTTPS (Secure Web), and 22 is SSH (Remote Login). An 'Open Port' means a service is actively listening and could be a target."
+              },
+              {
+                "id": "u4_m1_l3_c3",
+                "title": "Enumeration",
+                "body": "Enumeration is the process of collecting detailed information about a target, such as usernames, shared folders, and specific software versions. It is a more active stage of info-gathering."
               }
             ],
             "quiz": {
-              "question": "What information can a WHOIS lookup typically reveal?",
-              "options": ["The site's passwords", "The domain owner's contact details", "The server's internal temperature", "The site's daily visitors"],
-              "correct_index": 1,
-              "explanation": "WHOIS provides administrative and technical contact information for registered domain names."
+              "question": "What does a 'larger attack surface' imply for a system?",
+              "options": ["Faster network speed", "Better security", "Increased security risk", "More storage space"],
+              "correct_index": 2,
+              "explanation": "A larger attack surface provides more potential entry points for an attacker, thereby increasing the overall risk."
             }
           },
           {
             "id": "u4_m1_l4",
-            "title": "Social Engineering Prep",
+            "title": "Types of Pen Testing",
             "cards": [
               {
                 "id": "u4_m1_l4_c1",
-                "title": "People as Targets",
-                "body": "Recon isn't just for computers. Hackers use LinkedIn to see who works in IT, what software they use (listed in job bios), and who the new, inexperienced employees are."
+                "title": "Network & Web Apps",
+                "body": "Network Pen Testing tests infrastructure (routers, firewalls) for misconfigurations. Web App Pen Testing focuses on websites, looking for flaws like SQL Injection or Cross-Site Scripting (XSS)."
               },
               {
                 "id": "u4_m1_l4_c2",
-                "title": "The Power of Small Details",
-                "body": "Finding out a company uses 'Slack' or 'Outlook' allows a hacker to craft a fake login page that looks identical to the real thing, increasing the success of a phishing attack."
+                "title": "Wireless & Mobile",
+                "body": "Wireless testing checks Wi-Fi encryption and passwords. Mobile testing looks at Android/iOS apps for insecure data storage, excessive permissions, or exposed components."
               }
             ],
             "quiz": {
-              "question": "Why is LinkedIn a goldmine for ethical hackers doing recon?",
-              "options": ["To find jobs", "To identify employees and the technologies they use", "To see the CEO's salary", "To send virus messages"],
-              "correct_index": 1,
-              "explanation": "Employee profiles often list technical skills and tools used at work, giving hackers clues about the company's internal infrastructure."
+              "question": "Which type of testing focuses on identifying flaws like SQL Injection in websites?",
+              "options": ["Wireless Testing", "Network Testing", "Web Application Testing", "Mobile Testing"],
+              "correct_index": 2,
+              "explanation": "Web Application Penetration Testing is specifically designed to find vulnerabilities in websites and web services."
             }
           },
           {
             "id": "u4_m1_l5",
-            "title": "Recon Tools: Shodan",
+            "title": "Introduction to the 6 Phases",
             "cards": [
               {
                 "id": "u4_m1_l5_c1",
-                "title": "The Search Engine for Things",
-                "body": "Unlike Google, Shodan searches for 'Connected Devices'. It finds webcams, industrial control systems, routers, and smart fridges. It's often called the 'Scariest Search Engine'."
+                "title": "The Hacking Lifecycle",
+                "body": "Ethical hacking isn't just about 'breaking in'; it's a structured process. It starts with gathering information, moves to finding vulnerabilities, and ends with a detailed report on how to fix them."
               },
               {
                 "id": "u4_m1_l5_c2",
-                "title": "Banner Grabbing",
-                "body": "Shodan works by 'Grabbing Banners'—the intro message a server sends when you connect. These banners often reveal the exact version of software, making it easy to find known exploits."
+                "title": "The Phases Overview",
+                "body": "The 6 phases are: 1. Reconnaissance, 2. Scanning, 3. Gaining Access, 4. Maintaining Access, 5. Covering Tracks, and 6. Reporting. Each phase is critical for a successful and professional test."
               }
             ],
             "quiz": {
-              "question": "What is Shodan primarily used for?",
-              "options": ["Searching for websites", "Finding connected devices and IoT hardware", "Buying hardware", "Watching movies"],
-              "correct_index": 1,
-              "explanation": "Shodan indexes everything connected to the internet that isn't a traditional website, from routers to power plant controllers."
+              "question": "How many main phases are typically identified in a professional penetration test?",
+              "options": ["3", "4", "6", "10"],
+              "correct_index": 2,
+              "explanation": "Standard methodology generally follows 6 distinct phases from initial scouting to final reporting."
             }
           }
         ]
       },
       {
         "id": "u4_m2",
-        "title": "Scanning & Enumeration",
-        "description": "Mapping the network and finding open doors.",
+        "title": "Phase 1: Reconnaissance (Information Gathering)",
+        "description": "Learning how to 'scout' a target using passive and active techniques.",
         "is_pro": false,
         "lessons": [
           {
             "id": "u4_m2_l1",
-            "title": "Introduction to Nmap",
+            "title": "Introduction to Reconnaissance",
             "cards": [
               {
                 "id": "u4_m2_l1_c1",
-                "title": "The Network Mapper",
-                "body": "Nmap is the industry standard for network scanning. It sends packets to a target and analyzes the responses to see which 'Ports' (doors) are open."
+                "title": "What is Reconnaissance?",
+                "body": "Reconnaissance is the very first phase of ethical hacking. It is the systematic process of gathering information about a target (system, network, organization) before attempting any attack. Attackers use this to identify weaknesses, services, and entry points.\n\nAlso known as:\n• Information Gathering\n• Footprinting\n• Intelligence Gathering"
               },
               {
                 "id": "u4_m2_l1_c2",
-                "title": "Basic Scan",
-                "body": "'nmap 192.168.1.1' will check the 1,000 most common ports. If port 80 is open, there's a web server. If port 22 is open, there's a remote login (SSH) service."
+                "title": "Why It Matters",
+                "body": "Without proper info gathering, attacks become difficult, noisy, and much easier to detect. It is often considered 'The Foundation of Penetration Testing'. The more you know about the target, the easier it is to plan a successful, stealthy attack."
+              },
+              {
+                "id": "u4_m2_l1_c3",
+                "title": "Real-World Analogy",
+                "body": "Think of a bank robbery (in a movie). A criminal doesn't just run in. They observe security guards, camera positions, employee timings, and entry/exit points first. Cyber attackers do the exact same thing with digital targets."
+              },
+              {
+                "id": "u4_m2_l1_c4",
+                "title": "Objectives",
+                "body": "• Understand the target environment\n• Map the attack surface\n• Discover network infrastructure\n• Find active systems and exposed services\n• Search for possible vulnerabilities"
+              },
+              {
+                "id": "u4_m2_l1_c5",
+                "title": "Passive vs. Active",
+                "body": "Recon is divided into two main categories:\n\n1. Passive: Gathering info from afar (no direct interaction). Safe and stealthy.\n2. Active: Direct engagement (like checking locks on doors). Higher risk of detection."
               }
             ],
             "quiz": {
-              "question": "What is an 'Open Port' in the context of scanning?",
-              "options": ["A broken computer", "A service that is actively listening for incoming connections", "A fast internet connection", "A USB slot"],
+              "question": "Why is reconnaissance considered 'the foundation of penetration testing'?",
+              "options": [
+                "It allows attackers to directly alter database records",
+                "Without it, attacks become difficult, noisy, and easier to detect",
+                "It automatically exploits vulnerabilities on web applications",
+                "It encrypts the target's data to demand a ransom"
+              ],
               "correct_index": 1,
-              "explanation": "An open port is like an unlocked door on a computer, indicating a service (like a website) is ready to talk to others."
+              "explanation": "Information gathered during this phase ensures the success and stealth of later attack stages. Without it, the attacker is essentially 'flying blind'."
             }
           },
           {
             "id": "u4_m2_l2",
-            "title": "Advanced Nmap Flags",
+            "title": "Passive vs. Active Techniques",
             "cards": [
               {
                 "id": "u4_m2_l2_c1",
-                "title": "Service Detection (-sV)",
-                "body": "Standard scans just say 'Port 80 is open'. Using '-sV' forces Nmap to talk to the port to find out exactly what version of software is running (e.g., Apache 2.4.5)."
+                "title": "Passive Reconnaissance",
+                "body": "Collecting info WITHOUT directly interacting with target systems. The attacker remains hidden, and the target organization usually cannot detect this activity.",
+                "image_name": "u4_l2_passive_binoculars"
               },
               {
                 "id": "u4_m2_l2_c2",
-                "title": "Stealth Scan (-sS)",
-                "body": "A 'SYN' scan. It starts a connection but cuts it off before it's finished. This is harder for simple firewalls to log than a full connection."
+                "title": "Why Passive is Safer",
+                "body": "It generates little to no logs on the target's servers because you are using third-party sources like Google, LinkedIn, or public records instead of connecting to the target's network directly."
+              },
+              {
+                "id": "u4_m2_l2_c3",
+                "title": "Sources of Passive Recon",
+                "body": "• Search Engines (Google, Bing)\n• Social Media (LinkedIn, Twitter)\n• Job Portals (reveals tech stack)\n• Public DNS records\n• GitHub (leaked code/keys)\n• Data breach databases"
+              },
+              {
+                "id": "u4_m2_l2_c4",
+                "title": "Active Reconnaissance",
+                "body": "Requires direct engagement with the target system. This presents a much higher risk of generating alerts and logs on the target's security systems (Firewalls, IDS).",
+                "image_name": "u4_l2_active_lock_picking"
+              },
+              {
+                "id": "u4_m2_l2_c5",
+                "title": "Examples of Active Recon",
+                "body": "• Connecting directly to HTTP, FTP, or SMTP mail servers\n• Calling the company (Social Engineering)\n• Physically entering premises as a 'repairman'\n• Port scanning (Nmap)"
               }
             ],
             "quiz": {
-              "question": "Which Nmap flag is used to detect the version of services running on open ports?",
-              "options": ["-sS", "-v", "-sV", "-O"],
+              "question": "Which of the following is considered an active reconnaissance activity?",
+              "options": [
+                "Reading news articles about the target company online",
+                "Looking up domain ownership via a public WHOIS repository",
+                "Connecting directly to a target's company SMTP mail server",
+                "Reviewing an employee's professional profile on LinkedIn"
+              ],
               "correct_index": 2,
-              "explanation": "-sV (Service Version) is crucial for finding outdated software that might have known security holes."
+              "explanation": "Connecting directly to company servers (HTTP, FTP, SMTP) requires direct interaction, which makes it 'Active'."
             }
           },
           {
             "id": "u4_m2_l3",
-            "title": "OS Fingerprinting",
+            "title": "Google Dorking Mastery",
             "cards": [
               {
                 "id": "u4_m2_l3_c1",
-                "title": "Identifying the OS (-O)",
-                "body": "Different Operating Systems (Windows, Linux, iOS) respond to network errors in slightly different ways. Nmap uses these 'Fingerprints' to guess the target's OS."
+                "title": "What is Google Dorking?",
+                "body": "Also known as 'Google Hacking', it uses advanced search operators to discover sensitive info that is publicly exposed but hidden from normal searches (like config files, passwords, or admin panels)."
               },
               {
                 "id": "u4_m2_l3_c2",
-                "title": "Why it matters",
-                "body": "You don't want to use a Windows exploit on a Linux server. Knowing the OS allows the hacker to narrow down their attack strategy."
+                "title": "Core Operators",
+                "body": "• site: Restricts results to one domain (site:nasa.gov)\n• filetype: Searches for specific extensions (filetype:pdf)\n• intitle: Finds keywords in the page title (intitle:\"index of\")"
+              },
+              {
+                "id": "u4_m2_l3_c3",
+                "title": "Dorking in Action",
+                "body": "A query like `site:*.gov.in filetype:pdf` finds all PDFs on Indian govt sites. Using precise operators saves hours of manual work.",
+                "image_name": "u4_l3_google_dork_search_result"
+              },
+              {
+                "id": "u4_m2_l3_c3_2",
+                "title": "Exposed Directories",
+                "body": "Using `intitle:\"index of\" \"backup\"` allows attackers to find exposed backup folders that should never be public.",
+                "image_name": "u4_l3_index_of_backup_directory"
+              },
+              {
+                "id": "u4_m2_l4_c4",
+                "title": "Advanced Operators",
+                "body": "• inurl: Finds keywords in the URL (inurl:admin)\n• intext: Searches body text (intext:\"password\")\n• cache: Shows Google's saved version of a page"
+              },
+              {
+                "id": "u4_m2_l3_c5",
+                "title": "Logical Operators",
+                "body": "• OR (|): term A or term B\n• AND (&): both terms\n• \"\": exact phrase\n• *: wildcard for unknown parts (site:*.com)\n• -: exclude a term"
+              },
+              {
+                "id": "u4_m2_l3_c6",
+                "title": "Defensive Controls",
+                "body": "• Robots.txt: Tell Google what NOT to index\n• Disable Directory Indexing: Hide raw folder lists\n• WAF: Web Application Firewall\n• MFA: Multi-Factor Authentication"
               }
             ],
             "quiz": {
-              "question": "How does Nmap identify the Operating System of a target?",
-              "options": ["By asking the user", "By analyzing small differences in how the target's network stack responds", "By guessing based on the IP address", "It reads a file on the desktop"],
+              "question": "Which Google Dork query is most effective for finding text files that might contain exposed password data?",
+              "options": [
+                "site:confidential txt",
+                "filetype:txt \"password\"",
+                "inurl:index of passwords",
+                "intitle:login.php & txt"
+              ],
               "correct_index": 1,
-              "explanation": "This is called OS Fingerprinting; it uses the unique way each OS handles network traffic to identify it."
+              "explanation": "The 'filetype:txt' narrows it to text files, and the quotes ensure the exact word 'password' is inside."
             }
           },
           {
             "id": "u4_m2_l4",
-            "title": "Vulnerability Scanning",
+            "title": "Automation and the GHDB",
             "cards": [
               {
                 "id": "u4_m2_l4_c1",
-                "title": "Automated Scouting",
-                "body": "Tools like Nessus or OpenVAS go beyond Nmap. They have a database of thousands of 'Known Vulnerabilities' and check the target against all of them automatically."
+                "title": "Google Hacking Database",
+                "body": "The GHDB (managed by Exploit-DB) is a massive collection of pre-made dorks contributed by the community. It's the 'cheat sheet' for findng vulnerabilities via Google.",
+                "image_name": "u4_l4_exploit_db_ghdb"
               },
               {
                 "id": "u4_m2_l4_c2",
-                "title": "The Report",
-                "body": "These tools produce a list of 'Findings' ranked by severity (Low, Medium, High, Critical). Professional Pentesters use these reports to prioritize their work."
+                "title": "GHDB Categories",
+                "body": "Queries are organized by what they find:\n• Files containing passwords\n• Sensitive directories (backups/logs)\n• Vulnerable servers/IoT devices\n• Login portals\n• Database files"
+              },
+              {
+                "id": "u4_m2_l4_c3",
+                "title": "Real Examples",
+                "body": "• DB Dumps: `filetype:sql \"dump\"` \n• Webcams: `intitle:\"webcamXP 5\"` \n• Admin: `inurl:admin login` ",
+                "image_name": "u4_l4_ghdb_table_examples"
+              },
+              {
+                "id": "u4_m2_l4_c4",
+                "title": "Automation Tools",
+                "body": "Manual dorking is slow. Pros use tools like:\n• DorkScanner: Automates result parsing\n• GoogD0rker: Finds API keys & password docs\n• SQLmap: Can use dorks to find vulnerable DBs"
               }
             ],
             "quiz": {
-              "question": "What is the primary difference between a Port Scanner (Nmap) and a Vulnerability Scanner (Nessus)?",
-              "options": ["Nmap is faster", "Nessus actively looks for known security holes, not just open ports", "Nmap is for Windows only", "There is no difference"],
+              "question": "What platform officially hosts the Google Hacking Database (GHDB)?",
+              "options": [
+                "GitHub Repositories",
+                "Exploit Database",
+                "Shodan.io",
+                "Google Search Console"
+              ],
               "correct_index": 1,
-              "explanation": "Port scanners find 'doors', while vulnerability scanners check if those doors have 'broken locks' (vulnerabilities)."
+              "explanation": "The GHDB is maintained on Exploit-DB (exploit-db.com/google-hacking-database)."
             }
           },
           {
             "id": "u4_m2_l5",
-            "title": "Enumeration: Digging Deeper",
+            "title": "DNS & Subdomain Enumeration",
             "cards": [
               {
                 "id": "u4_m2_l5_c1",
-                "title": "What is Enumeration?",
-                "body": "The process of extracting user names, machine names, network resources, and shares. This is the 'Final Map' before the actual attack."
+                "title": "What is DNS?",
+                "body": "Domain Name System. It converts names (google.com) to IPs (142.250...). It's the 'Phonebook' of the internet."
               },
               {
                 "id": "u4_m2_l5_c2",
-                "title": "Common Targets",
-                "body": "SMB (File sharing) and SNMP (Network management) are favorites. If misconfigured, they can leak every username on the network or even administrative passwords."
+                "title": "DNS Record Types",
+                "body": "• A: Domain to IPv4\n• AAAA: Domain to IPv6\n• MX: Mail Servers (target for phishing)\n• NS: Name Servers\n• TXT: Verification/Config data"
+              },
+              {
+                "id": "u4_m2_l5_c3",
+                "title": "Subdomain Enumeration",
+                "body": "Finding hidden parts of a site: dev.site.com, vpn.site.com, admin.site.com. Main pages are usually secure, but 'dev' or 'test' subdomains are often forgotten and weak."
+              },
+              {
+                "id": "u4_m2_l5_c4",
+                "title": "Sublist3r Utility",
+                "body": "A popular tool to automate subdomain discovery using multiple search engines. Command: `sublist3r -d kali.org -t 3`",
+                "image_name": "u4_l5_sublist3r_help_menu"
+              },
+              {
+                "id": "u4_m2_l5_c4_2",
+                "title": "Enumeration Output",
+                "body": "Tools like Sublist3r print out a list of discovered unique subdomains which helps map the target's entire digital footprint.",
+                "image_name": "u4_l5_sublist3r_terminal_output"
+              },
+              {
+                "id": "u4_m2_l5_c5",
+                "title": "Subfinder (Passive)",
+                "body": "A lightning-fast tool that uses ONLY passive sources. It never connects to the target directly, making it 100% stealthy.",
+                "image_name": "u4_l5_subfinder_tesla_example"
               }
             ],
             "quiz": {
-              "question": "What is the main goal of the Enumeration phase?",
-              "options": ["To crash the server", "To gather specific details like usernames and network shares", "To delete logs", "To install a virus"],
-              "correct_index": 1,
-              "explanation": "Enumeration is about creating a detailed list of assets and users to prepare for the exploitation phase."
+              "question": "Which DNS record type identifies the Mail Server handling emails for an organization?",
+              "options": [
+                "A Record",
+                "TXT Record",
+                "MX Record",
+                "AAAA Record"
+              ],
+              "correct_index": 2,
+              "explanation": "MX stands for Mail Exchanger. It tells the internet where to send emails for that domain."
+            }
+          },
+          {
+            "id": "u4_m2_l6",
+            "title": "Investigative Tools",
+            "cards": [
+              {
+                "id": "u4_m2_l6_c1",
+                "title": "WHOIS Lookup",
+                "body": "Reveals who owns a domain, their contact info (if not hidden), registration dates, and name servers. It's the 'Background Check' for websites.",
+                "image_name": "u4_l6_whois_terminal_output"
+              },
+              {
+                "id": "u4_m2_l6_c2",
+                "title": "Nslookup & Dig",
+                "body": "Command-line tools to query DNS. Nslookup is standard, while `dig` is preferred by pros because it shows more metadata.",
+                "image_name": "u4_l6_nslookup_a_record"
+              },
+              {
+                "id": "u4_m2_l6_c2_2",
+                "title": "Dig Utility",
+                "body": "The 'dig' command provides detailed output including TTL (Time To Live) and query timing.",
+                "image_name": "u4_l6_dig_terminal_output"
+              },
+              {
+                "id": "u4_m2_l6_c3",
+                "title": "Shodan: The IoT Search Engine",
+                "body": "Unlike Google (which scans websites), Shodan scans 'things'. It finds routers, webcams, servers, and power plant controls by their IP banners.",
+                "image_name": "u4_l6_shodan_search_interface"
+              }
+            ],
+            "quiz": {
+              "question": "What unique detail does the 'dig' utility display by default that 'nslookup' does not?",
+              "options": [
+                "The IPv4 Address",
+                "The authoritative mail servers",
+                "The Time To Live (TTL) values",
+                "The registrar's phone number"
+              ],
+              "correct_index": 2,
+              "explanation": "Dig provides more technical metadata, including TTL, which indicates how long a DNS record is cached."
             }
           }
         ]
       },
       {
         "id": "u4_m3",
-        "title": "Gaining Access (Exploitation)",
-        "description": "Crossing the perimeter and entering the system.",
+        "title": "Phase 2: Scanning & Enumeration",
+        "description": "The technical analysis of open ports, services, and vulnerabilities.",
         "is_pro": false,
         "lessons": [
           {
             "id": "u4_m3_l1",
-            "title": "The Metasploit Framework",
+            "title": "Port Scanning with Nmap",
             "cards": [
               {
                 "id": "u4_m3_l1_c1",
-                "title": "Exploitation Made Easy",
-                "body": "Metasploit is a massive library of 'Exploits' (the key) and 'Payloads' (the action). It automates the process of breaking into a system."
+                "title": "Finding the Doors",
+                "body": "Scanning identifies 'Open Ports'—services listening for connections. Nmap is the industry standard. It can detect the OS, service versions, and even run scripts to find common bugs."
               },
               {
                 "id": "u4_m3_l1_c2",
-                "title": "How it works",
-                "body": "1. Choose an Exploit. 2. Set the Target IP. 3. Choose a Payload (like a remote shell). 4. Type 'Exploit'. If the target is vulnerable, you're in!"
+                "title": "Stealth Scanning",
+                "body": "Hackers use different 'flags' in Nmap (like -sS) to scan quietly without finishing the connection. This 'Half-Open' scan is harder for simple firewalls to detect."
               }
             ],
             "quiz": {
-              "question": "In Metasploit, what is a 'Payload'?",
-              "options": ["The hole in the software", "The code that runs on the target system AFTER the exploit is successful", "The hacker's computer", "A type of firewall"],
+              "question": "Which tool is the industry standard for network and port scanning?",
+              "options": ["Wireshark", "Nmap", "Metasploit", "Burp Suite"],
               "correct_index": 1,
-              "explanation": "The exploit gets you through the door; the payload is what you actually want to DO once you're inside (like steal files)."
+              "explanation": "Nmap (Network Mapper) is the most powerful and widely used tool for discovering hosts and services on a computer network."
             }
           },
           {
             "id": "u4_m3_l2",
-            "title": "Brute Force Attacks",
+            "title": "Banner Grabbing",
             "cards": [
               {
                 "id": "u4_m3_l2_c1",
-                "title": "Guessing the Key",
-                "body": "A brute force attack tries every possible combination of letters and numbers to find a password. This is slow but guaranteed to work eventually if the password is simple."
+                "title": "Reading the Sign",
+                "body": "When you connect to a service, it often 'introduces' itself. Example: 'Apache 2.4.41'. This is called a banner. If that version has a known exploit, the hacker knows exactly how to get in."
               },
               {
                 "id": "u4_m3_l2_c2",
-                "title": "Dictionary Attacks",
-                "body": "A smarter version. It uses a list of millions of common passwords (like 'password123', 'admin', 'qwerty'). Tools like 'Hydra' or 'Burp Suite' do this automatically."
+                "title": "Tools for the Job",
+                "body": "Netcat (nc) is the 'Swiss Army Knife' of networking. It can be used for banner grabbing by simply connecting to a port: 'nc -v <IP> <Port>'."
               }
             ],
             "quiz": {
-              "question": "What is a 'Dictionary Attack'?",
-              "options": ["Learning new words", "Trying every word in a list of common passwords", "Deleting a computer's dictionary", "Hacking a library"],
+              "question": "What is the goal of 'Banner Grabbing'?",
+              "options": ["To steal the website's logo", "To identify the specific version of a running service", "To change the website's title", "To block the service"],
               "correct_index": 1,
-              "explanation": "It's a targeted brute-force method that relies on the fact that most people use common, predictable passwords."
-            }
-          },
-          {
-            "id": "u4_m3_l3",
-            "title": "Phishing & Client-Side Attacks",
-            "cards": [
-              {
-                "id": "u4_m3_l3_c1",
-                "title": "Attacking the User",
-                "body": "If the server is too secure, hackers attack the person using it. Phishing emails trick users into downloading a 'Malicious Document' or entering their credentials into a fake site."
-              },
-              {
-                "id": "u4_m3_l3_c2",
-                "title": "Malicious Macros",
-                "body": "Hackers send an Excel file that says 'Enable Content to see Invoice'. Clicking that button runs a hidden script (Macro) that gives the hacker a backdoor to your PC."
-              }
-            ],
-            "quiz": {
-              "question": "Why do hackers use phishing instead of direct server attacks?",
-              "options": ["It's more fun", "Human beings are often the 'weakest link' in security", "Phishing is faster", "Server hacking is illegal"],
-              "correct_index": 1,
-              "explanation": "Social engineering bypasses expensive firewalls by simply asking a human to let the attacker in."
-            }
-          },
-          {
-            "id": "u4_m3_l4",
-            "title": "Wireless Hacking (Wi-Fi)",
-            "cards": [
-              {
-                "id": "u4_m3_l4_c1",
-                "title": "WPA2/WPA3 Cracking",
-                "body": "Hackers capture the 'Handshake'—the data sent when you connect to Wi-Fi. They then take that data home and use a GPU to guess the Wi-Fi password offline."
-              },
-              {
-                "id": "u4_m3_l4_c2",
-                "title": "Evil Twin Attack",
-                "body": "A hacker sets up a Wi-Fi network with the same name as the Cafe's Wi-Fi. Your phone connects automatically, and now the hacker can see every site you visit."
-              }
-            ],
-            "quiz": {
-              "question": "What is an 'Evil Twin' attack?",
-              "options": ["A virus that duplicates files", "A fake Wi-Fi access point made to look legitimate", "Hacking your own brother", "A type of dual-monitor virus"],
-              "correct_index": 1,
-              "explanation": "It's a social engineering attack where a rogue hotspot tricks users into connecting so their traffic can be intercepted."
-            }
-          },
-          {
-            "id": "u4_m3_l5",
-            "title": "Web App Exploits: SQLi",
-            "cards": [
-              {
-                "id": "u4_m3_l5_c1",
-                "title": "SQL Injection",
-                "body": "Attacking the database behind a website. By typing special code into a 'Login' box, a hacker can trick the database into showing them EVERY user's password."
-              },
-              {
-                "id": "u4_m3_l5_c2",
-                "title": "Prevention",
-                "body": "Developers must use 'Input Validation'. Never trust what a user types; always clean it before sending it to the database."
-              }
-            ],
-            "quiz": {
-              "question": "What is the primary target of an SQL Injection attack?",
-              "options": ["The user's monitor", "The website's database", "The Wi-Fi router", "The computer's CPU"],
-              "correct_index": 1,
-              "explanation": "SQLi targets the database, allowing attackers to steal, change, or delete sensitive data stored by the web application."
+              "explanation": "Banner grabbing identifies software versions, which is the key to finding specific exploits for that system."
             }
           }
         ]
       },
       {
         "id": "u4_m4",
-        "title": "Maintaining Access & Clearing Tracks",
-        "description": "Staying inside and erasing the evidence.",
+        "title": "Phase 3: Gaining Access (Exploitation)",
+        "description": "The 'Break-In'—using vulnerabilities to enter a system.",
         "is_pro": false,
         "lessons": [
           {
             "id": "u4_m4_l1",
-            "title": "What is a Backdoor?",
+            "title": "The Art of the Exploit",
             "cards": [
               {
                 "id": "u4_m4_l1_c1",
-                "title": "Permanent Entry",
-                "body": "Once a hacker is in, they don't want to exploit the system again. They install a 'Backdoor'—a hidden way to log in later without needing a password."
+                "title": "Metasploit Framework",
+                "body": "The world's most used exploitation tool. It contains thousands of ready-to-use 'Exploits' for known bugs. You select a target, pick an exploit, and launch it."
               },
               {
                 "id": "u4_m4_l1_c2",
-                "title": "Rootkits",
-                "body": "The ultimate backdoor. A rootkit hides deep inside the Operating System. It can hide its own files and processes so that even the Antivirus can't see it."
+                "title": "Password Cracking",
+                "body": "Sometimes there's no technical bug, so attackers target weak passwords. Tools like 'John the Ripper' or 'Hydra' try thousands of common passwords per second until they find a match."
               }
             ],
             "quiz": {
-              "question": "Why would a hacker install a backdoor?",
-              "options": ["To help the user", "To maintain access even if the original vulnerability is patched", "To make the computer faster", "To change the wallpaper"],
+              "question": "Which tool is a famous 'Exploitation Framework' used by both hackers and pros?",
+              "options": ["Nmap", "Wireshark", "Metasploit", "Antivirus"],
+              "correct_index": 2,
+              "explanation": "Metasploit simplifies the process of exploiting vulnerabilities by providing a library of verified exploit code."
+            }
+          }
+        ]
+      },
+      {
+        "id": "u4_m5",
+        "title": "Final Phases: Maintaining, Covering & Reporting",
+        "description": "Completing the cycle and providing value to the client.",
+        "is_pro": false,
+        "lessons": [
+          {
+            "id": "u4_m5_l1",
+            "title": "Persistence & Stealth",
+            "cards": [
+              {
+                "id": "u4_m5_l1_c1",
+                "title": "Maintaining Access",
+                "body": "After getting in, a tester wants to stay in. They install 'Backdoors' or create new admin users. This ensures access isn't lost if the target reboots their computer."
+              },
+              {
+                "id": "u4_m5_l1_c2",
+                "title": "Covering Tracks",
+                "body": "Ethical hackers clear logs and delete their tools to see if the client's 'Security Operations Center' (SOC) can detect their presence. If the hacker is invisible, the defense needs improvement."
+              }
+            ],
+            "quiz": {
+              "question": "Why would an attacker create a 'Backdoor'?",
+              "options": ["To make the computer faster", "To ensure they can re-enter the system later without exploiting it again", "To fix a bug", "To protect the user"],
               "correct_index": 1,
-              "explanation": "Backdoors ensure the hacker doesn't lose their 'hard-earned' access if the system is updated or rebooted."
+              "explanation": "Backdoors provide 'Persistence', allowing long-term access even if the original vulnerability is patched."
             }
           },
           {
-            "id": "u4_m4_l2",
-            "title": "Privilege Escalation",
+            "id": "u4_m5_l2",
+            "title": "The Report: The Final Product",
             "cards": [
               {
-                "id": "u4_m4_l2_c1",
-                "title": "Getting to Root",
-                "body": "Initial access is usually as a 'Low-level user' with no power. Privilege Escalation is the process of finding a second bug to become the 'Administrator' or 'Root'."
+                "id": "u4_m5_l2_c1",
+                "title": "Why We Report",
+                "body": "The report is the ONLY thing the client pays for. It documents: 1. How the hack was done. 2. What data was found. 3. How to fix the holes. No report = No professional test."
               },
               {
-                "id": "u4_m4_l2_c2",
-                "title": "Horizontal vs Vertical",
-                "body": "Vertical: Moving from User to Admin. Horizontal: Moving from one User to another User (e.g., hacking your coworker's account from your own)."
+                "id": "u4_m5_l2_c2",
+                "title": "Remediation Steps",
+                "body": "A good report doesn't just say 'You are hacked'. It provides 'Remediation'—clear instructions for developers on how to patch the bugs and strengthen the system."
               }
             ],
             "quiz": {
-              "question": "What is 'Vertical' Privilege Escalation?",
-              "options": ["Hacking a computer on a different floor", "Gaining a higher level of permission (like Admin)", "Stealing another user's files", "Updating your software"],
-              "correct_index": 1,
-              "explanation": "Vertical escalation is about moving up the chain of command, from a restricted account to an all-powerful one."
-            }
-          },
-          {
-            "id": "u4_m4_l3",
-            "title": "Clearing Tracks",
-            "cards": [
-              {
-                "id": "u4_m4_l3_c1",
-                "title": "Hiding the Evidence",
-                "body": "To avoid getting caught, hackers must delete the 'Logs' that recorded their actions. They might delete 'auth.log' or specific entries that show their IP address."
-              },
-              {
-                "id": "u4_m4_l3_c2",
-                "title": "Modifying Timestamps",
-                "body": "Hackers use tools to change the 'Last Modified' date of files they changed to a date in the past, so the admin doesn't notice anything new."
-              }
-            ],
-            "quiz": {
-              "question": "Why do hackers delete system logs?",
-              "options": ["To save disk space", "To hide the evidence of their activities from the administrator", "To uninstall the OS", "To speed up the internet"],
-              "correct_index": 1,
-              "explanation": "Logs are the 'security camera footage' of a computer; deleting them is like erasing the tapes after a robbery."
-            }
-          },
-          {
-            "id": "u4_m4_l4",
-            "title": "The Ethical Hacker's Report",
-            "cards": [
-              {
-                "id": "u4_m4_l4_c1",
-                "title": "The Most Important Step",
-                "body": "For an Ethical Hacker, the 'Attack' is just the data collection phase. The real work is writing a report that explains HOW they got in and HOW the company can fix it."
-              },
-              {
-                "id": "u4_m4_l4_c2",
-                "title": "Executive Summary",
-                "body": "A good report has a technical section for IT staff and a 'High-level' summary for bosses that explains the business risk in simple terms."
-              }
-            ],
-            "quiz": {
-              "question": "What is the primary purpose of a penetration testing report?",
-              "options": ["To brag about the hack", "To provide actionable advice on how to fix the security holes", "To get the IT staff fired", "To ask for more money"],
-              "correct_index": 1,
-              "explanation": "The value of an ethical hacker is in helping the organization improve its defenses, not just finding holes."
-            }
-          },
-          {
-            "id": "u4_m5",
-            "title": "Ethics & Law",
-            "cards": [
-              {
-                "id": "u4_m5_l1",
-                "title": "Stay Legal",
-                "body": "Without written permission (a 'Scope of Work'), hacking is illegal, even if you don't steal anything. 'I was just testing' is not a valid legal defense."
-              },
-              {
-                "id": "u4_m5_l2",
-                "title": "Responsible Disclosure",
-                "body": "If you find a bug by accident, report it through the company's 'Bug Bounty' program or contact them privately. Never post a vulnerability online before it's fixed."
-              }
-            ],
-            "quiz": {
-              "question": "What is the most important thing to have before starting a penetration test?",
-              "options": ["A fast computer", "Written permission from the owner", "A Kali Linux USB", "A good VPN"],
-              "correct_index": 1,
-              "explanation": "Permission is what separates a professional ethical hacker from a common cybercriminal."
+              "question": "What is the most important part of an ethical hacker's job?",
+              "options": ["Breaking into the server", "Stealing credit card data", "Providing a detailed report with fixes", "Finding the fastest way to hack"],
+              "correct_index": 2,
+              "explanation": "The ultimate goal of ethical hacking is to improve security, which can only happen through clear, actionable reporting."
             }
           }
         ]
