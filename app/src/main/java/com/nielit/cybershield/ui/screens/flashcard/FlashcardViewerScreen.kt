@@ -5,6 +5,7 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -21,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +30,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -314,12 +318,21 @@ fun FlashCard(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    var isExpanded by remember { mutableStateOf(false) }
+
     val imageResId = remember(card.imageName) {
         if (card.imageName != null) {
             context.resources.getIdentifier(card.imageName, "drawable", context.packageName).let {
                 if (it != 0) it else null
             }
         } else null
+    }
+
+    if (isExpanded && imageResId != null) {
+        FullScreenImage(
+            imageResId = imageResId,
+            onDismiss = { isExpanded = false }
+        )
     }
 
     Card(
@@ -341,6 +354,11 @@ fun FlashCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(16f / 10f)
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onDoubleTap = { isExpanded = true }
+                            )
+                        }
                 ) {
                     AsyncImage(
                         model             = resId,
@@ -361,6 +379,23 @@ fun FlashCard(
                                 )
                             )
                     )
+
+                    // Zoom Hint
+                    Surface(
+                        color = Color.Black.copy(alpha = 0.5f),
+                        shape = CircleShape,
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(12.dp)
+                            .size(32.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.ZoomIn,
+                            contentDescription = "Double tap to expand",
+                            tint = Color.White,
+                            modifier = Modifier.padding(6.dp)
+                        )
+                    }
                 }
             }
 
@@ -687,5 +722,61 @@ fun QuizUnavailableCard(onMarkComplete: () -> Unit) {
         Spacer(Modifier.height(16.dp))
         CsPrimaryButton("Mark Complete Anyway", onClick = onMarkComplete,
             modifier = Modifier.fillMaxWidth())
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Full-Screen Image Overlay
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+fun FullScreenImage(
+    imageResId: Int,
+    onDismiss: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+                .clickable { onDismiss() },
+            contentAlignment = Alignment.Center
+        ) {
+            AsyncImage(
+                model = imageResId,
+                contentDescription = "Full Screen Image",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.fillMaxSize()
+            )
+
+            // Close Button
+            IconButton(
+                onClick = onDismiss,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close",
+                    tint = Color.White
+                )
+            }
+
+            Text(
+                text = "Tap anywhere to close",
+                color = Color.White.copy(alpha = 0.5f),
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp)
+            )
+        }
     }
 }
