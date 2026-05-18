@@ -55,7 +55,11 @@ fun LoginScreen(
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
-                account.idToken?.let { viewModel.signInWithGoogle(it) }
+                viewModel.signInWithGoogle(
+                    idToken = account.idToken ?: "",
+                    name = account.displayName,
+                    email = account.email
+                )
             } catch (e: ApiException) {
                 // Handle error
             }

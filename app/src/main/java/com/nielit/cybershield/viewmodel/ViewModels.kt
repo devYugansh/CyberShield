@@ -129,13 +129,24 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signInWithGoogle(idToken: String) {
+    fun signInWithGoogle(idToken: String, name: String?, email: String?) {
         _uiState.value = AuthUiState.Loading
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _uiState.value = AuthUiState.Verified
+                    viewModelScope.launch {
+                        authRepository.setGuestMode(false)
+                        // Pre-fill profile from Google if available
+                        if (name != null || email != null) {
+                            authRepository.updateProfile(
+                                name = name ?: "",
+                                dob = "", // Google doesn't provide DOB easily
+                                email = email
+                            )
+                        }
+                        _uiState.value = AuthUiState.Verified
+                    }
                 } else {
                     _uiState.value = AuthUiState.Error(task.exception?.localizedMessage ?: "Google sign in failed")
                 }
@@ -314,7 +325,8 @@ class ThemeViewModel @Inject constructor(
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val themeRepository: ThemeRepository
+    private val themeRepository: ThemeRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _notif      = MutableStateFlow(true)
@@ -323,15 +335,33 @@ class SettingsViewModel @Inject constructor(
     val isDarkMode: StateFlow<Boolean> = themeRepository.isDarkTheme
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
+    val currentUser: StateFlow<User?> = authRepository.currentUser
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
     private val _masked     = MutableStateFlow("")
     val maskedPhone: StateFlow<String> = _masked.asStateFlow()
 
     private val _error      = MutableSharedFlow<String>()
     val errorMessage: SharedFlow<String> = _error.asSharedFlow()
 
+    fun updateProfile(name: String, dob: String, email: String) {
+        viewModelScope.launch {
+            try {
+                authRepository.updateProfile(name, dob, email)
+            } catch (e: Exception) {
+                _error.emit("Failed to update profile: ${e.localizedMessage}")
+            }
+        }
+    }
+
     init {
         viewModelScope.launch {
-            // TODO: read DataStore and emit initial values
+            authRepository.currentUser.collect { user ->
+                if (user != null) {
+                    _masked.value = user.maskedPhone
+                    // You could also populate name/email if needed in settings UI
+                }
+            }
         }
     }
 
@@ -352,7 +382,7 @@ class SettingsViewModel @Inject constructor(
 
     fun signOut() {
         viewModelScope.launch {
-            // TODO: FirebaseAuth.signOut() + clear DataStore
+            authRepository.signOut()
         }
     }
 }

@@ -68,16 +68,30 @@ data class ModuleProgress(
 // ── Auth model ────────────────────────────────────────────────────────────────
 
 data class User(
-    val phone       : String,           // e.g. "+919876543210"
+    val phone       : String? = null,    // null if Google-only user
+    val name        : String? = null,    // From Google
+    val email       : String? = null,    // From Google
+    val photoUrl    : String? = null,    // From Google
     val isGuest     : Boolean = false
 ) {
     /** Masked form: +91 98765 XXXXX */
     val maskedPhone: String get() {
-        if (phone.length < 6) return phone
-        val last = phone.takeLast(5)
-        return "${phone.take(phone.length - 5)}${last.replace(Regex("."), "X")}"
+        val p = phone ?: return ""
+        if (p.length < 6) return p
+        val last = p.takeLast(5)
+        return "${p.take(p.length - 5)}${last.replace(Regex("."), "X")}"
     }
 
     /** Initials shown in AvatarCircle */
-    val initials: String get() = if (isGuest) "G" else phone.takeLast(2)
+    val initials: String get() {
+        if (isGuest) return "G"
+        if (!name.isNullOrBlank()) {
+            return name.split(" ")
+                .filter { it.isNotEmpty() }
+                .take(2)
+                .map { it.first().uppercase() }
+                .joinToString("")
+        }
+        return phone?.takeLast(2) ?: "U"
+    }
 }

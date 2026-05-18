@@ -45,16 +45,8 @@ class HomeViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     // Reactive current user
-    val currentUser: StateFlow<User?> = authRepository.isGuestMode.map { isGuest ->
-        if (isGuest) {
-            User(phone = "Guest Mode", isGuest = true)
-        } else {
-            val firebaseUser = FirebaseAuth.getInstance().currentUser
-            if (firebaseUser != null) {
-                User(phone = firebaseUser.phoneNumber ?: "Unknown", isGuest = false)
-            } else null
-        }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    val currentUser: StateFlow<User?> = authRepository.currentUser
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     init {
         loadContent()

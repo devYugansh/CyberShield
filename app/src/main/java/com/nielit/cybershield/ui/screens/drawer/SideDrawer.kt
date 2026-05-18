@@ -148,18 +148,24 @@ private fun DrawerHeader(user: User?, modifier: Modifier = Modifier) {
         )
         Spacer(Modifier.height(12.dp))
         Text(
-            text  = if (user == null || user.isGuest) "Hello, Guest"
-                    else "Hello, User",
+            text  = when {
+                user == null || user.isGuest -> "Hello, Guest"
+                !user.name.isNullOrBlank() -> "Hello, ${user.name}"
+                else -> "Hello, User"
+            },
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface
         )
         if (user != null && !user.isGuest) {
-            Spacer(Modifier.height(2.dp))
-            Text(
-                text  = user.maskedPhone,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            val subtitle = user.email ?: user.maskedPhone
+            if (subtitle.isNotEmpty()) {
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text  = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

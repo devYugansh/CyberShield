@@ -12,7 +12,20 @@
           "package_name": "com.nielit.cybershield"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "992609422177-keggr5atph6ucl0ep73nrgd55vr825bg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nielit.cybershield",
+            "certificate_hash": "fd2f153a9109024064df9b8fa7c97bb75b3dad03"
+          }
+        },
+        {
+          "client_id": "992609422177-igel60bae9f2p0vgfh5shbqm1op7id30.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDu7yvdib1uyi_t4XrBY8TNfBPuP8S0DxA"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "992609422177-igel60bae9f2p0vgfh5shbqm1op7id30.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
