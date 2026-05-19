@@ -2121,51 +2121,220 @@
       {
         "id": "u4_m3",
         "title": "Phase 2: Scanning & Enumeration",
-        "description": "The technical analysis of open ports, services, and vulnerabilities.",
+        "description": "Directly interacting with targets to map networks and identify services.",
         "is_pro": false,
         "lessons": [
           {
             "id": "u4_m3_l1",
-            "title": "Port Scanning with Nmap",
+            "title": "Foundations of Active Recon",
             "cards": [
               {
                 "id": "u4_m3_l1_c1",
-                "title": "Finding the Doors",
-                "body": "Scanning identifies 'Open Ports'—services listening for connections. Nmap is the industry standard. It can detect the OS, service versions, and even run scripts to find common bugs."
+                "title": "What is Active Reconnaissance?",
+                "body": "Active reconnaissance involves directly interacting with the target system or network. Unlike passive methods, you connect to the target, which generates network traffic, creates logs, and may trigger security alerts. It's an intrusive but highly detailed approach."
               },
               {
                 "id": "u4_m3_l1_c2",
-                "title": "Stealth Scanning",
-                "body": "Hackers use different 'flags' in Nmap (like -sS) to scan quietly without finishing the connection. This 'Half-Open' scan is harder for simple firewalls to detect."
+                "title": "Why It's Riskier",
+                "body": "When you communicate directly with a system, firewalls may detect the activity, IDS/IPS systems may generate alerts, and administrators may notice suspicious behavior. This significantly increases the risk of detection compared to passive scouting."
+              },
+              {
+                "id": "u4_m3_l1_c3",
+                "title": "The Watering Hole Attack",
+                "body": "A famous active technique where an attacker infects websites that the targets frequently visit. By profiling the target's interests, the attacker waits for them to 'visit the watering hole' and gain access through created loopholes. This often involves social engineering."
+              },
+              {
+                "id": "u4_m3_l1_c4",
+                "title": "Defensive Measures",
+                "body": "Organizations try to reduce recon success by limiting public information, hiding software versions, disabling unnecessary services, and monitoring for suspicious scanning activities. Training employees against social engineering is also vital."
               }
             ],
             "quiz": {
-              "question": "Which tool is the industry standard for network and port scanning?",
-              "options": ["Wireshark", "Nmap", "Metasploit", "Burp Suite"],
+              "question": "What is the primary characteristic of 'Active' reconnaissance?",
+              "options": [
+                "Searching public records",
+                "Directly interacting with the target system",
+                "Asking a friend for information",
+                "Using Google Dorking"
+              ],
               "correct_index": 1,
-              "explanation": "Nmap (Network Mapper) is the most powerful and widely used tool for discovering hosts and services on a computer network."
+              "explanation": "Active reconnaissance requires a direct connection or interaction with the target, which makes it more intrusive and detectable."
             }
           },
           {
             "id": "u4_m3_l2",
-            "title": "Banner Grabbing",
+            "title": "Browsers & Extensions",
             "cards": [
               {
                 "id": "u4_m3_l2_c1",
-                "title": "Reading the Sign",
-                "body": "When you connect to a service, it often 'introduces' itself. Example: 'Apache 2.4.41'. This is called a banner. If that version has a known exploit, the hacker knows exactly how to get in."
+                "title": "The Web Browser as a Tool",
+                "body": "Browsers are readily available and powerful. By default, they connect to port 80 (HTTP) or 443 (HTTPS). However, you can access custom ports by adding them to the URL, like https://127.0.0.1:8834/."
               },
               {
                 "id": "u4_m3_l2_c2",
-                "title": "Tools for the Job",
-                "body": "Netcat (nc) is the 'Swiss Army Knife' of networking. It can be used for banner grabbing by simply connecting to a port: 'nc -v <IP> <Port>'."
+                "title": "Developer Tools",
+                "body": "Pressing Ctrl+Shift+I opens Developer Tools. This allows you to inspect received files, view/modify JavaScript, check cookies, and discover the site's folder structure.",
+                "image_name": "u4_p3_browser_dev_tools"
+              },
+              {
+                "id": "u4_m3_l2_c3",
+                "title": "Proxy & Agent Switchers",
+                "body": "FoxyProxy allows quick switching between proxy servers (useful with Burp Suite). User-Agent Switcher lets you pretend to be using a different OS or browser (e.g., browsing from an iPhone while on a PC)."
+              },
+              {
+                "id": "u4_m3_l2_c4",
+                "title": "Wappalyzer",
+                "body": "Wappalyzer is an extension that provides insights into the technologies used on a website, such as the CMS, web server, and framework, all while you browse normally.",
+                "image_name": "u4_p3_wappalyzer"
               }
             ],
             "quiz": {
-              "question": "What is the goal of 'Banner Grabbing'?",
-              "options": ["To steal the website's logo", "To identify the specific version of a running service", "To change the website's title", "To block the service"],
+              "question": "Which browser extension is used to identify the technology stack (CMS, Server, etc.) of a website?",
+              "options": [
+                "FoxyProxy",
+                "Wappalyzer",
+                "AdBlock",
+                "User-Agent Switcher"
+              ],
               "correct_index": 1,
-              "explanation": "Banner grabbing identifies software versions, which is the key to finding specific exploits for that system."
+              "explanation": "Wappalyzer fingerprints the technologies used by a website as you browse it."
+            }
+          },
+          {
+            "id": "u4_m3_l3",
+            "title": "Host Discovery (Ping & Traceroute)",
+            "cards": [
+              {
+                "id": "u4_m3_l3_c1",
+                "title": "Ping (ICMP Echo)",
+                "body": "Ping uses ICMP (Type 8 for Request, Type 0 for Reply) to check if a system is online. It helps verify connectivity before spending time on more detailed scans.",
+                "image_name": "u4_p3_ping_output"
+              },
+              {
+                "id": "u4_m3_l3_c2",
+                "title": "Interpreting Failures",
+                "body": "A '100% packet loss' doesn't always mean the host is down. It could be unplugged, crashed, or a firewall could be configured to block ICMP packets (common in Windows).",
+                "image_name": "u4_p3_ping_failed"
+              },
+              {
+                "id": "u4_m3_l3_c3",
+                "title": "Traceroute & TTL",
+                "body": "Traceroute maps the path to a target. It uses the 'Time To Live' (TTL) field. Each router decrements TTL by 1; when it hits 0, the router sends back an ICMP 'Time Exceeded' message.",
+                "image_name": "u4_p3_traceroute_ttl"
+              },
+              {
+                "id": "u4_m3_l3_c4",
+                "title": "ICMP Time Exceeded",
+                "body": "By 'tricking' routers with small TTL values (1, 2, 3...), we force them to reveal their IP addresses. This reveals the number of 'hops' and the network path to the target.",
+                "image_name": "u4_p3_traceroute_exceeded"
+              },
+              {
+                "id": "u4_m3_l3_c5",
+                "title": "Traceroute Output",
+                "body": "Each line represents a router. Stars (*) indicate that the system didn't receive the expected ICMP message, often because a router is configured to drop those packets.",
+                "image_name": "u4_p3_traceroute_output"
+              }
+            ],
+            "quiz": {
+              "question": "What happens when a router receives a packet with a TTL of 1?",
+              "options": [
+                "It forwards it to the next hop",
+                "It decrements it to 0, drops the packet, and sends an ICMP Time Exceeded message",
+                "It increases it to 64",
+                "It ignores the TTL and processes the packet"
+              ],
+              "correct_index": 1,
+              "explanation": "When TTL reach 0, the packet is discarded and an error message is sent back to the source."
+            }
+          },
+          {
+            "id": "u4_m3_l4",
+            "title": "Manual Banner Grabbing",
+            "cards": [
+              {
+                "id": "u4_m3_l4_c1",
+                "title": "What is Banner Grabbing?",
+                "body": "A banner is text displayed by a server containing details like software type and version. Grabbing it helps hackers find specific vulnerabilities for that version."
+              },
+              {
+                "id": "u4_m3_l4_c2",
+                "title": "Telnet for Banners",
+                "body": "Although Telnet is insecure (cleartext), its client can connect to any TCP service. By connecting to port 80 and issuing HTTP commands, you can see the server's version banner.",
+                "image_name": "u4_p3_telnet_banner"
+              },
+              {
+                "id": "u4_m3_l4_c3",
+                "title": "Netcat (nc) Basics",
+                "body": "Netcat is the 'Swiss Army Knife' of networking. It can act as both a client (connecting to ports) and a server (listening on ports). It supports both TCP and UDP."
+              },
+              {
+                "id": "u4_m3_l4_c4",
+                "title": "Netcat Banner Grabbing",
+                "body": "Using `nc <IP> 80` followed by a manual HTTP request allows you to grab service banners efficiently and see exactly what is running on a port.",
+                "image_name": "u4_p3_netcat_banner"
+              },
+              {
+                "id": "u4_m3_l4_c5",
+                "title": "Netcat Echo & Listen",
+                "body": "You can use `nc -lvnp <port>` to listen for incoming connections. This is useful for testing connectivity or creating simple chat/echo relays between systems.",
+                "image_name": "u4_p3_netcat_echo"
+              }
+            ],
+            "quiz": {
+              "question": "Which tool is known as the 'Swiss Army Knife' of networking?",
+              "options": [
+                "Telnet",
+                "Ping",
+                "Netcat (nc)",
+                "Traceroute"
+              ],
+              "correct_index": 2,
+              "explanation": "Netcat is extremely versatile and can be used for reading, writing, and listening across network connections."
+            }
+          },
+          {
+            "id": "u4_m3_l5",
+            "title": "Scanning & Automation",
+            "cards": [
+              {
+                "id": "u4_m3_l5_c1",
+                "title": "Port Scanning Basics",
+                "body": "Port scanning identifies open 'doors' on a system. Services like HTTP (80), HTTPS (443), SSH (22), and FTP (21) communicate through these specific ports."
+              },
+              {
+                "id": "u4_m3_l5_c2",
+                "title": "Nikto Web Scanner",
+                "body": "Nikto is an open-source scanner that quickly grabs banners and fingerprints web servers, identifying versions, config files, and other valuable details.",
+                "image_name": "u4_p3_nikto_scan"
+              },
+              {
+                "id": "u4_m3_l5_c3",
+                "title": "Nmap (Network Mapper)",
+                "body": "Nmap is the most powerful tool for network discovery. It can find live hosts, perform port scanning, and detect operating systems and service versions.",
+                "image_name": "u4_p3_nmap_banner"
+              },
+              {
+                "id": "u4_m3_l5_c4",
+                "title": "Netcraft OSINT",
+                "body": "Netcraft is a web interface that checks technologies and infrastructure. It's great for indirectly determining server versions and underlying OS without direct scanning.",
+                "image_name": "u4_p3_netcraft_report"
+              },
+              {
+                "id": "u4_m3_l5_c5",
+                "title": "Importance in Pen Testing",
+                "body": "Reconnaissance forms the base of the entire process. Poor recon leads to failed attacks; strong recon allows testers to understand targets and find real opportunities."
+              }
+            ],
+            "quiz": {
+              "question": "Which tool is used for fast web server fingerprinting and vulnerability scanning?",
+              "options": [
+                "Ping",
+                "Nikto",
+                "Traceroute",
+                "WHOIS"
+              ],
+              "correct_index": 1,
+              "explanation": "Nikto is specifically designed to scan web servers for vulnerabilities and configuration issues."
             }
           }
         ]
