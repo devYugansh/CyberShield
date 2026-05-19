@@ -1,7 +1,19 @@
 package com.nielit.cybershield.domain.model
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+
+// ── Root Wrapper ──────────────────────────────────────────────────────────────
+
+@Serializable
+data class CourseData(
+    val version: Int,
+    val units: List<CourseUnit>
+)
+
 // ── Content models ────────────────────────────────────────────────────────────
 
+@Serializable
 data class CourseUnit(
     val id          : String,
     val title       : String,
@@ -9,32 +21,42 @@ data class CourseUnit(
     val modules     : List<Module> = emptyList()
 )
 
+@Serializable
 data class Module(
     val id          : String,
     val title       : String,
     val description : String = "",
+    @SerialName("is_pro")
     val isPro       : Boolean = false,
     val lessons     : List<Lesson> = emptyList()
 )
 
+@Serializable
 data class Lesson(
     val id          : String,
-    val moduleId    : String,
+    @SerialName("module_id")
+    val moduleId    : String = "",
     val title       : String,
-    val flashcards  : List<Flashcard> = emptyList(),
+    val cards       : List<Flashcard> = emptyList(),
     val quiz        : QuizQuestion? = null
 )
 
+@Serializable
 data class Flashcard(
     val id          : String,
     val title       : String,
     val body        : String,
-    val imageName   : String? = null    // Name of the drawable resource
+    @SerialName("image_name")
+    val imageName   : String? = null,    // Local drawable name OR remote URL
+    @SerialName("is_url")
+    val isUrl       : Boolean = false    // Flag to tell Coil how to load it
 )
 
+@Serializable
 data class QuizQuestion(
     val question    : String,
-    val options     : List<String>,     // always 4 in V1
+    val options     : List<String>,
+    @SerialName("correct_index")
     val correctIndex: Int,
     val explanation : String
 )
