@@ -28,8 +28,8 @@ class ContentUpdateManager @Inject constructor(
     private val _updateEvents = MutableSharedFlow<UpdateEvent>()
     val updateEvents = _updateEvents.asSharedFlow()
     
-    // Actual GitHub repository details for OTA updates
-    private val BASE_URL = "https://raw.githubusercontent.com/devYugansh/CyberShield/feature/github-ota/ota"
+    // URL for the Public Content Repository
+    private val BASE_URL = "https://raw.githubusercontent.com/devYugansh/CyberShield-Content/main"
     private val VERSION_URL = "$BASE_URL/version.json"
     private val CONTENT_URL = "$BASE_URL/units.json"
 
@@ -40,7 +40,9 @@ class ContentUpdateManager @Inject constructor(
     suspend fun checkForUpdates(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val request = Request.Builder().url(VERSION_URL).build()
+                val request = Request.Builder()
+                    .url(VERSION_URL)
+                    .build()
                 okHttpClient.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) return@withContext false
                     
@@ -65,7 +67,9 @@ class ContentUpdateManager @Inject constructor(
         return withContext(Dispatchers.IO) {
             try {
                 val updateFile = File(context.filesDir, "units_updated.json")
-                val request = Request.Builder().url(CONTENT_URL).build()
+                val request = Request.Builder()
+                    .url(CONTENT_URL)
+                    .build()
                 
                 okHttpClient.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) return@withContext false
