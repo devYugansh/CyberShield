@@ -1,9 +1,9 @@
 {
-  "version": 3,
+  "version": 4 ,
   "units": [
     {
       "id": "unit_01",
-      "title": "Unit 1: [UPDATED] Cyber Security Mastery",
+      "title": "Unit 1:Cyber Security Fundamentals",
       "description": "The bedrock of digital safety. Understand the 'Why' and 'How' of cybersecurity.",
       "modules": [
         {
