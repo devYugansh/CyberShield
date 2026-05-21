@@ -56,10 +56,11 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = HomeUiState.Loading
             combine(
-                flowOf(contentRepository.units),
+                contentRepository.courseDataFlow,
                 contentRepository.completedLessonsFlow()
-            ) { dataUnits, completedIds ->
+            ) { courseData, completedIds ->
                 try {
+                    val dataUnits = courseData.units
                     val domainUnits = dataUnits.map { du ->
                         com.nielit.cybershield.domain.model.CourseUnit(
                             id = du.id,

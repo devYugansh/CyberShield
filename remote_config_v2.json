@@ -1,0 +1,10 @@
+{
+  "parameters": {
+    "latest_content_version": {
+      "defaultValue": {
+        "value": "2"
+      },
+      "valueType": "NUMBER"
+    }
+  }
+}
