@@ -19,3 +19,6 @@ local.properties
 /app/src/release/google-services.json
 /app/src/profile/google-services.json
 /app/src/benchmark/google-services.json
+
+# Temporary Assets
+app/src/main/assets/*.txt

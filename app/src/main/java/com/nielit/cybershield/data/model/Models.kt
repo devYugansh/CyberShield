@@ -3,6 +3,14 @@ package com.nielit.cybershield.data.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// ── Root Wrapper ──────────────────────────────────────────────────────────────
+
+@Serializable
+data class CourseData(
+    val version: Int,
+    val units: List<CourseUnit>
+)
+
 // ── Content models ────────────────────────────────────────────────────────────
 
 @Serializable

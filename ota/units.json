@@ -1,9 +1,9 @@
 {
-  "version": 2,
+  "version": 5 ,
   "units": [
     {
       "id": "unit_01",
-      "title": "Unit 1: Fundamentals of Cyber Security",
+      "title": "Unit 1: Cyber Security Fundamental",
       "description": "The bedrock of digital safety. Understand the 'Why' and 'How' of cybersecurity.",
       "modules": [
         {
@@ -714,7 +714,7 @@
                 {
                   "id": "u1_m5_l5_c2",
                   "title": "No Tech Required",
-                  "body": "They didn't use fancy code. They used greed and fear to trick people. This shows that 'Vishing' (Voice Phishing) is just as dangerous as malware."
+                  "body": "They didn't use greed and fear to trick people. This shows that 'Vishing' (Voice Phishing) is just as dangerous as malware."
                 }
               ],
               "quiz": {
@@ -1553,7 +1553,7 @@
                   "body": "Integrity ensures data is accurate, complete, and hasn't been tampered with. If a hacker changes your bank balance from $10 to $1,000,000, integrity is lost."
                 },
                 {
-                  "id": "u3_m2_l1_c2",
+                  "id": "u3_m2_l2_c2",
                   "title": "Authorized Changes Only",
                   "body": "Data should only be modified by authorized people in authorized ways. This includes preventing accidental corruption during a power cut."
                 }
