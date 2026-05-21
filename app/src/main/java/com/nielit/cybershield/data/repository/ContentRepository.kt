@@ -40,10 +40,10 @@ class ContentRepository @Inject constructor(
     private val UPDATED_JSON_NAME = "units_updated.json"
     private val ASSET_JSON_NAME = "units_v2.json"
 
-    private val _courseData = MutableStateFlow(getCourseData())
+    private val _courseData = MutableStateFlow(loadCourseData())
     val courseDataFlow: StateFlow<CourseData> = _courseData.asStateFlow()
 
-    private fun getCourseData(): CourseData {
+    private fun loadCourseData(): CourseData {
         val updatedFile = File(context.filesDir, UPDATED_JSON_NAME)
         
         val rawJson = try {
@@ -70,7 +70,7 @@ class ContentRepository @Inject constructor(
      * Call this after ContentUpdateManager downloads a new version.
      */
     fun refreshContent() {
-        _courseData.value = getCourseData()
+        _courseData.value = loadCourseData()
     }
 
     private val courseData: CourseData
