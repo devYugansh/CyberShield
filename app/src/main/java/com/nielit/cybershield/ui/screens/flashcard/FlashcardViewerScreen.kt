@@ -42,6 +42,7 @@ import com.nielit.cybershield.data.model.Lesson
 import com.nielit.cybershield.data.model.QuizQuestion
 import com.nielit.cybershield.ui.components.*
 import com.nielit.cybershield.ui.theme.*
+import com.nielit.cybershield.util.ImageUtils
 import com.nielit.cybershield.viewmodel.FlashcardUiState
 import com.nielit.cybershield.viewmodel.FlashcardViewModel
 import kotlinx.coroutines.delay
@@ -320,17 +321,13 @@ fun FlashCard(
     val context = LocalContext.current
     var isExpanded by remember { mutableStateOf(false) }
 
-    val imageResId = remember(card.imageName) {
-        if (card.imageName != null) {
-            context.resources.getIdentifier(card.imageName, "drawable", context.packageName).let {
-                if (it != 0) it else null
-            }
-        } else null
+    val imageSource = remember(card.imageName) {
+        ImageUtils.getImageSource(context, card.imageName)
     }
 
-    if (isExpanded && imageResId != null) {
+    if (isExpanded && imageSource != null) {
         FullScreenImage(
-            imageResId = imageResId,
+            imageSource = imageSource,
             onDismiss = { isExpanded = false }
         )
     }
@@ -349,7 +346,7 @@ fun FlashCard(
                 .verticalScroll(rememberScrollState())
         ) {
             // Image section - dynamic height based on presence
-            imageResId?.let { resId ->
+            imageSource?.let { source ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -361,7 +358,7 @@ fun FlashCard(
                         }
                 ) {
                     AsyncImage(
-                        model             = resId,
+                        model             = source,
                         contentDescription= null,
                         contentScale      = ContentScale.Crop,
                         modifier          = Modifier
@@ -731,7 +728,7 @@ fun QuizUnavailableCard(onMarkComplete: () -> Unit) {
 
 @Composable
 fun FullScreenImage(
-    imageResId: Int,
+    imageSource: Any,
     onDismiss: () -> Unit
 ) {
     Dialog(
@@ -750,7 +747,7 @@ fun FullScreenImage(
             contentAlignment = Alignment.Center
         ) {
             AsyncImage(
-                model = imageResId,
+                model = imageSource,
                 contentDescription = "Full Screen Image",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.fillMaxSize()

@@ -12,17 +12,18 @@ Establishing a stable build environment and a verified Realtime OTA content upda
 
 ## 🛠️ Current State of Code
 - **Build Status**: Stable.
-- **Kotlin Version**: 2.1.0
-- **Hilt Version**: 2.54 (Updated to support Kotlin 2.1.0 metadata).
-- **OTA System**: Transitioned to a "Public Content Repo" architecture. App code stays private, while content is fetched from a dedicated public repository (`CyberShield-Content`) to avoid hardcoding security tokens.
-- **Data Layer**: `ContentRepository` uses `StateFlow` to provide reactive updates to the UI when new content is downloaded.
+- **OTA System**: Fully functional for both Text and Images.
+    - JSON is fetched from the `ota/` folder in the main repo.
+    - Images are scanned from JSON and downloaded to `filesDir/images/` if missing.
+- **Image Strategy**: Hybrid approach using `ImageUtils.getImageSource()`. Priority: Internal Storage -> Bundled Drawables.
+- **Data Layer**: `ContentRepository` uses `StateFlow` for reactive updates.
 
 ## 📂 Files Actively Edited
-- `app/src/main/java/com/nielit/cybershield/data/repository/ContentRepository.kt`: Renamed `getCourseData()` to `loadCourseData()` to resolve a JVM signature clash.
-- `gradle/libs.versions.toml`: Upgraded Hilt version to 2.54.
-- `.gitignore`: Added ignore rule for `app/src/main/assets/*.txt`.
-- **Git Tracking**: Successfully untracked `Unit 4 part 3.txt` and other temporary assets from the repository while keeping them locally.
-- `ota/version.json` & `ota/units.json`: Local copies for publishing updates (Updated to v3).
+- `app/src/main/java/com/nielit/cybershield/data/remote/ContentUpdateManager.kt`: Added image extraction and download logic.
+- `app/src/main/java/com/nielit/cybershield/util/ImageUtils.kt`: Created for image resolution logic.
+- `app/src/main/java/com/nielit/cybershield/ui/screens/flashcard/FlashcardViewerScreen.kt`: Updated `FlashCard` and `FullScreenImage` to support OTA images.
+- `HANDOVER.md`: Updated with OTA image strategy.
+- `ota/images/`: New local folder created for hosting update assets.
 
 ## ❌ Failed Attempts / Blockers
 - **Hilt 2.59.2 Upgrade**: Failed because it requires AGP 9.0.0+, but the project is currently on AGP 8.7.3. Downgraded to **Hilt 2.54**, which is the "sweet spot" supporting both Kotlin 2.1.0 and AGP 8.x.

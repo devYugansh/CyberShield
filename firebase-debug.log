@@ -1,0 +1,55 @@
+[debug] [2026-05-20T10:34:15.571Z] ----------------------------------------------------------------------
+[debug] [2026-05-20T10:34:15.576Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\bhoom\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js remoteconfig:rollback --project cybershield-69f
+[debug] [2026-05-20T10:34:15.576Z] CLI Version:   15.18.0
+[debug] [2026-05-20T10:34:15.577Z] Platform:      win32
+[debug] [2026-05-20T10:34:15.577Z] Node Version:  v24.15.0
+[debug] [2026-05-20T10:34:15.577Z] Time:          Wed May 20 2026 16:04:15 GMT+0530 (India Standard Time)
+[debug] [2026-05-20T10:34:15.577Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-05-20T10:34:15.601Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-05-20T10:34:15.601Z] > authorizing via signed-in user (official.yugansh@gmail.com)
+[debug] [2026-05-20T10:34:15.602Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-05-20T10:34:15.602Z] > authorizing via signed-in user (official.yugansh@gmail.com)
+[debug] [2026-05-20T10:34:15.602Z] [iam] checking project cybershield-69f for permissions ["cloudconfig.configs.get","cloudconfig.configs.update","firebase.projects.get"]
+[debug] [2026-05-20T10:34:15.605Z] Checked if tokens are valid: true, expires at: 1779274974401
+[debug] [2026-05-20T10:34:15.605Z] Checked if tokens are valid: true, expires at: 1779274974401
+[debug] [2026-05-20T10:34:15.607Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cybershield-69f:testIamPermissions [none]
+[debug] [2026-05-20T10:34:15.607Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cybershield-69f:testIamPermissions  x-goog-user-project=cybershield-69f
+[debug] [2026-05-20T10:34:15.607Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cybershield-69f:testIamPermissions {"permissions":["cloudconfig.configs.get","cloudconfig.configs.update","firebase.projects.get"]}
+[debug] [2026-05-20T10:34:17.265Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cybershield-69f:testIamPermissions 200
+[debug] [2026-05-20T10:34:17.266Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cybershield-69f:testIamPermissions {"permissions":["cloudconfig.configs.get","cloudconfig.configs.update","firebase.projects.get"]}
+[debug] [2026-05-20T10:34:17.267Z] Checked if tokens are valid: true, expires at: 1779274974401
+[debug] [2026-05-20T10:34:17.267Z] Checked if tokens are valid: true, expires at: 1779274974401
+[debug] [2026-05-20T10:34:17.268Z] >>> [apiv2][query] GET https://firebaseremoteconfig.googleapis.com/v1/projects/cybershield-69f/remoteConfig:listVersions pageSize=1
+[debug] [2026-05-20T10:34:17.704Z] <<< [apiv2][status] GET https://firebaseremoteconfig.googleapis.com/v1/projects/cybershield-69f/remoteConfig:listVersions 200
+[debug] [2026-05-20T10:34:17.704Z] <<< [apiv2][body] GET https://firebaseremoteconfig.googleapis.com/v1/projects/cybershield-69f/remoteConfig:listVersions {}
+[debug] [2026-05-20T10:34:18.188Z] TypeError: Cannot read properties of undefined (reading '0')
+    at Command.actionFn (C:\Users\bhoom\AppData\Roaming\npm\node_modules\firebase-tools\lib\commands\remoteconfig-rollback.js:25:38)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-05-20T10:34:26.051Z] ----------------------------------------------------------------------
+[debug] [2026-05-20T10:34:26.057Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\bhoom\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js remoteconfig:rollback --project cybershield-69f -v 1
+[debug] [2026-05-20T10:34:26.057Z] CLI Version:   15.18.0
+[debug] [2026-05-20T10:34:26.057Z] Platform:      win32
+[debug] [2026-05-20T10:34:26.058Z] Node Version:  v24.15.0
+[debug] [2026-05-20T10:34:26.058Z] Time:          Wed May 20 2026 16:04:26 GMT+0530 (India Standard Time)
+[debug] [2026-05-20T10:34:26.058Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-05-20T10:34:26.078Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-05-20T10:34:26.079Z] > authorizing via signed-in user (official.yugansh@gmail.com)
+[debug] [2026-05-20T10:34:26.079Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-05-20T10:34:26.079Z] > authorizing via signed-in user (official.yugansh@gmail.com)
+[debug] [2026-05-20T10:34:26.080Z] [iam] checking project cybershield-69f for permissions ["cloudconfig.configs.get","cloudconfig.configs.update","firebase.projects.get"]
+[debug] [2026-05-20T10:34:26.083Z] Checked if tokens are valid: true, expires at: 1779274974401
+[debug] [2026-05-20T10:34:26.083Z] Checked if tokens are valid: true, expires at: 1779274974401
+[debug] [2026-05-20T10:34:26.085Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cybershield-69f:testIamPermissions [none]
+[debug] [2026-05-20T10:34:26.085Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cybershield-69f:testIamPermissions  x-goog-user-project=cybershield-69f
+[debug] [2026-05-20T10:34:26.086Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cybershield-69f:testIamPermissions {"permissions":["cloudconfig.configs.get","cloudconfig.configs.update","firebase.projects.get"]}
+[debug] [2026-05-20T10:34:27.746Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cybershield-69f:testIamPermissions 200
+[debug] [2026-05-20T10:34:27.746Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cybershield-69f:testIamPermissions {"permissions":["cloudconfig.configs.get","cloudconfig.configs.update","firebase.projects.get"]}
+[debug] [2026-05-20T10:34:27.747Z] Checked if tokens are valid: true, expires at: 1779274974401
+[debug] [2026-05-20T10:34:27.748Z] Checked if tokens are valid: true, expires at: 1779274974401
+[debug] [2026-05-20T10:34:27.748Z] >>> [apiv2][query] GET https://firebaseremoteconfig.googleapis.com/v1/projects/cybershield-69f/remoteConfig:listVersions pageSize=1
+[debug] [2026-05-20T10:34:28.465Z] <<< [apiv2][status] GET https://firebaseremoteconfig.googleapis.com/v1/projects/cybershield-69f/remoteConfig:listVersions 200
+[debug] [2026-05-20T10:34:28.466Z] <<< [apiv2][body] GET https://firebaseremoteconfig.googleapis.com/v1/projects/cybershield-69f/remoteConfig:listVersions {}
