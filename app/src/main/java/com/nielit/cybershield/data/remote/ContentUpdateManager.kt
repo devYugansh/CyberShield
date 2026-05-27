@@ -28,10 +28,11 @@ class ContentUpdateManager @Inject constructor(
     private val _updateEvents = MutableSharedFlow<UpdateEvent>()
     val updateEvents = _updateEvents.asSharedFlow()
     
-    // URL for the Public Content Repository
-    private val BASE_URL = "https://raw.githubusercontent.com/devYugansh/CyberShield-Content/main"
+    // URL for the Public Content Repository (pointing to 'ota' folder in this repo)
+    private val BASE_URL = "https://raw.githubusercontent.com/devYugansh/CyberShield/master/ota"
     private val VERSION_URL = "$BASE_URL/version.json"
     private val CONTENT_URL = "$BASE_URL/units.json"
+    private val IMAGES_BASE_URL = "$BASE_URL/images"
 
     /**
      * Checks if a new version is available and downloads it.
@@ -80,6 +81,10 @@ class ContentUpdateManager @Inject constructor(
                     val validatedData = json.decodeFromString<CourseData>(rawJson)
                     
                     if (validatedData.version > repository.contentVersion) {
+                        // 3. Download missing images before applying JSON
+                        val imageNames = extractImageNames(validatedData)
+                        downloadMissingImages(imageNames)
+
                         updateFile.writeText(rawJson)
                         repository.refreshContent()
                         _updateEvents.emit(UpdateEvent.Success(validatedData.version))
@@ -93,6 +98,62 @@ class ContentUpdateManager @Inject constructor(
                 _updateEvents.emit(UpdateEvent.Error(e.localizedMessage ?: "Unknown error"))
                 false
             }
+        }
+    }
+
+    private fun extractImageNames(data: CourseData): Set<String> {
+        val names = mutableSetOf<String>()
+        data.units.forEach { unit ->
+            unit.modules.forEach { module ->
+                module.lessons.forEach { lesson ->
+                    lesson.flashcards.forEach { card ->
+                        card.imageName?.let { if (it.isNotBlank()) names.add(it) }
+                    }
+                }
+            }
+        }
+        return names
+    }
+
+    private suspend fun downloadMissingImages(imageNames: Set<String>) {
+        val imagesDir = File(context.filesDir, "images").apply { if (!exists()) mkdirs() }
+        
+        imageNames.forEach { name ->
+            val imageFile = File(imagesDir, "$name.png")
+            // Also check assets to avoid redundant downloads
+            val assetExists = try {
+                context.assets.open("images/$name.png").use { true }
+            } catch (e: Exception) {
+                false
+            }
+
+            if (!imageFile.exists() && !assetExists) {
+                Log.d(TAG, "Downloading missing image: $name")
+                downloadImage(name, imageFile)
+            }
+        }
+    }
+
+    private suspend fun downloadImage(name: String, destination: File) {
+        try {
+            val request = Request.Builder()
+                .url("$IMAGES_BASE_URL/$name.png")
+                .build()
+            
+            okHttpClient.newCall(request).execute().use { response ->
+                if (response.isSuccessful) {
+                    response.body?.byteStream()?.use { input ->
+                        destination.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    Log.d(TAG, "Successfully downloaded image: $name")
+                } else {
+                    Log.e(TAG, "Failed to download image $name: ${response.code}")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error downloading image: $name", e)
         }
     }
 }
