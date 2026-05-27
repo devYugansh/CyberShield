@@ -1,5 +1,5 @@
 {
-  "version": 6 ,
+  "version": 7 ,
   "units": [
     {
       "id": "unit_01",
@@ -2460,7 +2460,7 @@
                   "id": "u4_m2_l6_c1",
                   "title": "WHOIS Lookup",
                   "body": "Reveals who owns a domain, their contact info (if not hidden), registration dates, and name servers. It's the 'Background Check' for websites.",
-                  "image_name": "u4_l6_whois_terminal_output"
+                  "image_name": "ota_test_image"
                 },
                 {
                   "id": "u4_m2_l6_c2",
