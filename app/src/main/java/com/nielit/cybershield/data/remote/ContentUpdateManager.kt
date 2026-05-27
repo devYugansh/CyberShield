@@ -29,7 +29,7 @@ class ContentUpdateManager @Inject constructor(
     val updateEvents = _updateEvents.asSharedFlow()
     
     // URL for the Public Content Repository (pointing to 'ota' folder in this repo)
-    private val BASE_URL = "https://raw.githubusercontent.com/devYugansh/CyberShield/feature/ota-images/ota"
+    private val BASE_URL = "https://raw.githubusercontent.com/devYugansh/CyberShield/master/ota"
     private val VERSION_URL = "$BASE_URL/version.json"
     private val CONTENT_URL = "$BASE_URL/units.json"
     private val IMAGES_BASE_URL = "$BASE_URL/images"
